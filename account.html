@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Settings</title>
+</head>
+<body>
+
+  <h1>Account Settings</h1>
+  
+  <form>
+    <label>Username: <input type="text" name="username"></label><br><br>
+    <label>Email: <input type="email" name="email"></label><br><br>
+    <label>Password: <input type="password" name="password"></label><br><br>
+    <button type="submit">Save Changes</button>
+  </form>
+
+  <!-- Delete Account Form -->
+  <form onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');" method="POST" action="/delete-account">
+    <button type="submit" style="color: white; background-color: red; padding: 8px 15px; border: none; cursor: pointer;">
+      Delete Account
+    </button>
+  </form>
+
+  <p><a href="settings.html">← Back to Settings</a></p>
+
+</body>
+</html>
+
