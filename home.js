@@ -1,42 +1,44 @@
-let windowCount = 0; // or however many static windows we have
-
 window.onload = () => {
-    const currentUser = loadUser();
-    if(!currentUser) {
-        window.location.href = "start.html";
-        return;
-    }
-    showWelcome(currentUser);
+  const currentUser = loadUser();
+  if (!currentUser) {
+    window.location.href = "start.html";
+    return;
+  }
 
-    if(currentUser.layout && currentUser.layout.length > 0){
+  showWelcome(currentUser);
+
+  if (currentUser.layout && currentUser.layout.length > 0) {
     loadLayout(currentUser);
-    }
-    const logoutBtn = document.getElementById("logout-btn");
-        if(logoutBtn) {
-            logoutBtn.addEventListener("click", () => {
-                localStorage.removeItem("loggedInUser");
-                window.location.href="start.html";
-        });
-    }
+  }
+
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "start.html";
+    });
+  }
 };
 
-//This loads this current user to call for saved item
-   function loadUser() {
-        const users = JSON.parse(localStorage.getItem("users")) || [];
-        const loggedInEmail = localStorage.getItem("loggedInUser");
-        return users.find(user => user.email === loggedInEmail);
-    };
+// Load the current user from localStorage
+function loadUser() {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const loggedInEmail = localStorage.getItem("loggedInUser");
+  return users.find(user => user.email === loggedInEmail);
+}
 
-    function showWelcome(user){
-        const welcomeMsg = document.getElementById("welcome-msg");
-        welcomeMsg.innerText = `Welcome, ${user.firstName}`;
-    };
+function showWelcome(user) {
+  const welcomeMsg = document.getElementById("welcome-msg");
+  welcomeMsg.innerText = `Welcome, ${user.firstName}`;
+}
 
-        //This loads the saved layout for the current user
+let windowCount = 0;
+
+// Create windows based on saved layout
 function loadLayout(user) {
   const layout = user.layout || [];
 
-  layout.forEach((win, index) => {
+  layout.forEach(win => {
     const winEl = document.createElement("div");
     winEl.classList.add("app-window");
     winEl.id = win.id;
@@ -47,14 +49,14 @@ function loadLayout(user) {
     winEl.style.position = "absolute";
     winEl.style.resize = win.pinned ? "none" : "both";
 
-    winEl.innerHTML = 
-    <div class ="window-header">
-      <button class="pin-btn">${win.pinned ? "📍" : "📌"}</button>
-      <button class="delete-btn">🗑️</button>
-      <h3>${win.id}</h3>
-    </div>
-    ;
-    
+    winEl.innerHTML = `
+      <div class="window-header">
+        <button class="pin-btn">${win.pinned ? "📍" : "📌"}</button>
+        <button class="delete-btn">🗑️</button>
+        <h3>${win.id}</h3>
+      </div>
+    `;
+
     if (win.pinned) {
       winEl.classList.add("pinned");
       lockWindow(winEl);
@@ -66,12 +68,11 @@ function loadLayout(user) {
     attachDeleteButton(winEl);
   });
 
-  // Update windowCount to reflect total windows
+  if (layout.length > 0) {
     windowCount = layout.length;
+  }
 }
 
-
-//This saves the layout for the user's session
 function saveLayout() {
   const currentUser = loadUser();
   if (!currentUser) return;
@@ -79,7 +80,7 @@ function saveLayout() {
   const layout = [];
   const windows = document.querySelectorAll(".app-window");
 
-  windows.forEach((win) => {
+  windows.forEach(win => {
     const rect = win.getBoundingClientRect();
     layout.push({
       id: win.id,
@@ -92,6 +93,7 @@ function saveLayout() {
   });
 
   currentUser.layout = layout;
+
   const users = JSON.parse(localStorage.getItem("users")) || [];
   const userIndex = users.findIndex(u => u.email === currentUser.email);
   if (userIndex !== -1) {
@@ -102,13 +104,39 @@ function saveLayout() {
   alert("Layout saved!");
 }
 
-
-// Attach save layout button
+// Save layout button
 const saveBtn = document.getElementById("save-layout-btn");
 if (saveBtn) {
   saveBtn.addEventListener("click", saveLayout);
 }
 
+document.getElementById("new-window-btn").addEventListener("click", () => {
+  windowCount++;
+
+  const newWin = document.createElement("div");
+  newWin.classList.add("app-window");
+  newWin.id = `window-${windowCount}`;
+  newWin.style.top = "100px";
+  newWin.style.left = "100px";
+  newWin.style.width = "200px";
+  newWin.style.height = "150px";
+  newWin.style.position = "absolute";
+  newWin.style.resize = "both";
+
+  newWin.innerHTML = `
+    <div class="window-header">
+      <button class="pin-btn">📌</button>
+      <button class="delete-btn">🗑️</button>
+      <h3>${newWin.id}</h3>
+    </div>
+  `;
+
+  document.body.appendChild(newWin);
+
+  makeDraggable(newWin);
+  attachPinButton(newWin);
+  attachDeleteButton(newWin);
+});
 
 function makeDraggable(winEl) {
   const header = winEl.querySelector(".window-header");
@@ -117,7 +145,7 @@ function makeDraggable(winEl) {
   let offsetX, offsetY;
 
   header.onmousedown = function (e) {
-    if(winEl.classList.contains("pinned")) return;
+    if (winEl.classList.contains("pinned")) return;
 
     offsetX = e.clientX - winEl.offsetLeft;
     offsetY = e.clientY - winEl.offsetTop;
@@ -134,37 +162,15 @@ function makeDraggable(winEl) {
   };
 }
 
-// Prevent dragging/resizing for pinned
 function lockWindow(el) {
   el.style.resize = "none";
   el.style.cursor = "default";
 }
 
-document.getElementById("new-window-btn")?.addEventListener("click", () => {
-  windowCount++;
-  const newWin = document.createElement("div");
-  newWin.classList.add("app-window");
-  newWin.id = `window-${windowCount}`;
-  newWin.style.top = "100px";
-  newWin.style.left = "100px";
-  newWin.style.width = "200px";
-  newWin.style.height = "150px";
-  newWin.style.position = "absolute";
-  newWin.style.resize = "both";
-
-  newWin.innerHTML = `
-    <button class="pin-btn">📌</button>
-    <button class="delete-btn">🗑️</button>
-    <h3>App ${windowCount}</h3>`;
-
-  document.body.appendChild(newWin);
-
-  makeDraggable(newWin); // allow movement
-  attachPinButton(newWin); // set up pin behavior
-  attachDeleteButton(newWin);
-
 function attachPinButton(winEl) {
-  const pinBtn = winEl.querySelector(".pin-btn");
+  const pinBtn = winEl.querySelector(".window-header .pin-btn");
+  if (!pinBtn) return;
+
   pinBtn.addEventListener("click", () => {
     winEl.classList.toggle("pinned");
 
@@ -174,18 +180,18 @@ function attachPinButton(winEl) {
     } else {
       winEl.style.resize = "both";
       winEl.style.cursor = "move";
-      makeDraggable(winEl);
       pinBtn.innerText = "📌";
     }
   });
 }
 
 function attachDeleteButton(winEl) {
-  const deleteBtn = winEl.querySelector(".delete-btn");
+  const deleteBtn = winEl.querySelector(".window-header .delete-btn");
+  if (!deleteBtn) return;
+
   deleteBtn.addEventListener("click", () => {
     if (confirm("Are you sure you want to delete this window?")) {
       winEl.remove();
     }
-  })
- }
-});
+  });
+}
