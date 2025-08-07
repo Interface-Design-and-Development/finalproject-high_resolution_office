@@ -5,6 +5,11 @@ function fadeInForm() {
 window.onload = function () {
   const loginForm = document.getElementById("login-form");
 
+  const loggedInEmail = localStorage.getItem("loggedInUser");
+  if(loggedInEmail){
+    window.location.href = "index.html";
+  }
+  
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -21,8 +26,10 @@ window.onload = function () {
     const matchedUser = users.find(user => user.email === username && user.password === password);
 
     if (matchedUser) {
-      alert("Login successful!");
-      window.location.href = "index.html"; // or your dashboard
+    //keeps track of logged in user
+      localStorage.setItem("loggedInUser", matchedUser.email);
+      alert(`Welcome back, ${matchedUser.firstName}!`);
+      window.location.href = "index.html";
     } else {
       alert("Incorrect username or password.");
     }
