@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Display Settings</title>
+  <link rel="stylesheet" href="display.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h1>Display Settings</h1>
+
+    <div class="settings">
+      <form>
+        <label for="theme">Theme:</label>
+        <select id="theme" name="theme">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="system">System Default</option>
+        </select>
+        <br /><br />
+
+        <label for="fontsize">Font Size:</label>
+        <select id="fontsize" name="fontsize">
+          <option value="small">Small</option>
+          <option value="medium" selected>Medium</option>
+          <option value="large">Large</option>
+        </select>
+        <br /><br />
+
+        <!-- Brightness -->
+        <label for="brightness">Brightness:</label>
+        <input type="range" id="brightness" name="brightness" min="0" max="100" value="50" />
+        <br /><br />
+
+        <!-- Contrast -->
+        <label for="contrast">Contrast:</label>
+        <input type="range" id="contrast" name="contrast" min="0" max="100" value="50" />
+        <br /><br />
+
+        <!-- Text Alignment -->
+        <label for="textAlign">Text Alignment:</label>
+        <select id="textAlign" name="textAlign">
+          <option value="left">Left</option>
+          <option value="center">Center</option>
+          <option value="right">Right</option>
+        </select>
+        <br /><br />
+
+        <label for="highcontrast">
+          <input type="checkbox" id="highcontrast" name="highcontrast" />
+          Enable High Contrast Mode
+        </label>
+        <br /><br />
+
+        <label for="animations">
+          <input type="checkbox" id="animations" name="animations" />
+          Disable Animations
+        </label>
+        <br /><br />
+
+        <button type="submit">Save Settings</button>
+      </form>
+
+      <p><a href="settings.html" class="back-button">← Back to Settings</a></p>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+
+.app-window.pinned {
+  border: 2px solid red; /* or any visual you want */
+}
+
+.app-window {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 200px;
+  height: 200px;
+  background: #f1f1f1;
+  border: 1px solid #ccc;
+  padding: 10px;
+  resize: both;
+  overflow: auto;
+  cursor: move;
+}
+.settings-link {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #007BFF;
+  font-weight: bold;
+}
+
+.settings-link:hover {
+  text-decoration: underline;
+}
+
