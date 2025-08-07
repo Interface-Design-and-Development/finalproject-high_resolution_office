@@ -20,6 +20,14 @@ window.onload = () => {
   }
 };
 
+ 
+    function addNote() {
+      const container = document.getElementById('dashContainer');
+      const newNote = document.createElement('div');
+      newNote.className = 'dashboard';
+      newNote.innerHTML = 'TO DO ITEM <span class="delete-button" onclick="this.parentElement.remove()">X</span>';
+      container.appendChild(newNote);
+    };
 // Load the current user from localStorage
 function loadUser() {
   const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -129,6 +137,7 @@ document.getElementById("new-window-btn").addEventListener("click", () => {
       <button class="delete-btn">🗑️</button>
       <h3>${newWin.id}</h3>
     </div>
+    <p>Window content here</p>
   `;
 
   document.body.appendChild(newWin);
