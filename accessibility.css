@@ -37,3 +37,13 @@ body {
 .container input{
     color:#007bff
 }
+.settings button{
+    margin-left: 120px;
+    margin-top: 10px;
+    border-color: #1f60a6;
+    border-radius: 8px;
+}
+.settings button:hover{
+    background-color: #1f60a6;
+    color:#f2f3f4;  
+}
