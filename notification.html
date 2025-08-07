@@ -1,21 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Notification Settings</title>
+  <link rel="stylesheet" href="notification.css" />
 </head>
 <body>
 
-  <h1>Notification Settings</h1>
+  <div class="container">
+    <h1>Notification Settings</h1>
 
-  <form>
-    <label><input type="checkbox" name="email_alerts" checked> Email Alerts</label><br><br>
-    <label><input type="checkbox" name="sms_alerts"> SMS Alerts</label><br><br>
-    <label><input type="checkbox" name="app_alerts" checked> App Notifications</label><br><br>
-    <button type="submit">Save Preferences</button>
-  </form>
+    <div class="settings">
+      <form>
+        <label>
+          <input type="checkbox" name="email_notifications" checked />
+          Email Notifications
+        </label><br /><br />
 
-  <p><a href="settings.html">← Back to Settings</a></p>
+        <label>
+          <input type="checkbox" name="sms_notifications" />
+          SMS Notifications
+        </label><br /><br />
+
+        <label>
+          <input type="checkbox" name="push_notifications" checked />
+          Push Notifications
+        </label><br /><br />
+
+        <label>
+          Notification Sound:
+          <select name="notification_sound">
+            <option value="default" selected>Default</option>
+            <option value="chime">Chime</option>
+            <option value="alert">Alert</option>
+            <option value="none">None</option>
+          </select>
+        </label><br /><br />
+
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
 
 </body>
 </html>
+
+

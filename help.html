@@ -1,25 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Help & Support</title>
-  <link rel="stylesheet" href="help.css"> <!-- Link to help.css -->
+  <link rel="stylesheet" href="help.css" />
 </head>
 <body>
 
-  <h1>Help & Support</h1>
+  <div class="container">
+    <h1>Help & Support</h1>
 
-  <p>If you're experiencing issues or have questions, please reach out to our support team.</p>
+    <div class="settings">
+      <p>If you're experiencing issues or have questions, please reach out to our support team.</p>
 
-  <form>
-    <label>Your Email: <input type="email" name="email"></label><br><br>
-    <label>Your Message:<br>
-      <textarea name="message" rows="5" cols="40"></textarea>
-    </label><br><br>
-    <button type="submit">Submit</button>
-  </form>
+      <form>
+        <label>Your Email: <input type="email" name="email" required></label><br /><br />
 
-  <p><a href="settings.html">← Back to Settings</a></p>
+        <label>Phone Number: <input type="tel" name="phone"></label><br /><br />
+
+        <label>Subject:
+          <select name="subject" required>
+            <option value="" disabled selected>Select a subject</option>
+            <option value="technical">Technical Issue</option>
+            <option value="billing">Billing Question</option>
+            <option value="feedback">Feedback</option>
+            <option value="other">Other</option>
+          </select>
+        </label><br /><br />
+
+        <label>Priority:
+          <select name="priority" required>
+            <option value="low" selected>Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </label><br /><br />
+
+        <label>Your Message:<br />
+          <textarea name="message" rows="5" cols="40" required></textarea>
+        </label><br /><br />
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <p><a href="settings.html">← Back to Settings</a></p>
+    </div>
+  </div>
 
 </body>
 </html>
+

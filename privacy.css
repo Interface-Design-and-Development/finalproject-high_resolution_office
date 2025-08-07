@@ -1,59 +1,50 @@
-* {
-    margin: 0;
-    padding: 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-  }
-  
-  body {
-    background: whitesmoke;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
-  
-  .privacy-container {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 700px;
-    width: 100%;
-  }
-  
-  .privacy-container h1 {
-    text-align: center;
-    color: #007bff;
-    margin-bottom: 1.5rem;
-  }
-  
-  .privacy-container h2 {
-    color: #007bff;
-    margin-top: 1.5rem;
-  }
-  
-  .privacy-container p {
-    font-size: 1rem;
-    color: #333;
-    margin-top: 0.5rem;
-    line-height: 1.6;
-  }
-  
-  .privacy-container ul {
-    margin-left: 1.5rem;
-    list-style-type: disc;
-  }
-  
-  .privacy-container li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .privacy-container a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .privacy-container a:hover {
-    color: #c91b00;
-  }
-  
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: whitesmoke;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+}
+
+.container {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.settings {
+  padding: 20px;
+  background: #f2f3f4;
+  border-radius: 8px;
+}
+
+.container h1 {
+  color: #007bff;
+  margin-left: 30px;
+}
+
+.container label {
+  font-size: small;
+  color: rgb(24, 24, 23);
+}
+
+.container input {
+  color: #007bff;
+}
+
+.settings button {
+  margin-left: 120px;
+  margin-top: 10px;
+  border-color: #1f60a6;
+  border-radius: 8px;
+}
+
+.settings button:hover {
+  background-color: #1f60a6;
+  color: #f2f3f4;
+}

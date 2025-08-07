@@ -3,27 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <title>Account Settings</title>
+  <link rel="stylesheet" href="account.css">
 </head>
 <body>
 
-  <h1>Account Settings</h1>
-  
-  <form>
-    <label>Username: <input type="text" name="username"></label><br><br>
-    <label>Email: <input type="email" name="email"></label><br><br>
-    <label>Password: <input type="password" name="password"></label><br><br>
-    <button type="submit">Save Changes</button>
-  </form>
+  <div class="container">
+    <h1>Account Settings</h1>
 
-  <!-- Delete Account Form -->
-  <form onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');" method="POST" action="/delete-account">
-    <button type="submit" style="color: white; background-color: red; padding: 8px 15px; border: none; cursor: pointer;">
-      Delete Account
-    </button>
-  </form>
+    <div class="settings">
+      <form>
+        <label>Username: <input type="text" name="username"></label><br><br>
+        <label>Email: <input type="email" name="email"></label><br><br>
+        <label>Password: <input type="password" name="password"></label><br><br>
+        <label>Full Name: <input type="text" name="fullname"></label><br><br>
+        <label>Phone Number: <input type="tel" name="phone"></label><br><br>
+        <label>Date of Birth: <input type="date" name="dob"></label><br><br>
+        <label>Profile Picture: <input type="file" name="profile_pic" accept="image/*"></label><br><br>
 
-  <p><a href="settings.html">← Back to Settings</a></p>
+        <label>Language:
+          <select name="language">
+            <option value="en" selected>English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="zh">Chinese</option>
+          </select>
+        </label><br><br>
+
+        <label>Time Zone:
+          <select name="timezone">
+            <option value="utc-6" selected>(UTC -06:00) Central Time</option>
+            <option value="utc-5">(UTC -05:00) Eastern Time</option>
+            <option value="utc-8">(UTC -08:00) Pacific Time</option>
+            <option value="utc+0">(UTC +00:00) UTC</option>
+          </select>
+        </label><br><br>
+
+        <button type="submit">Save Changes</button>
+      </form>
+
+      <form onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');" method="POST" action="/delete-account">
+        <button type="submit" class="delete-button">Delete Account</button>
+      </form>
+
+      <p><a href="settings.html">← Back to Settings</a></p>
+    </div>
+  </div>
 
 </body>
 </html>
+
+
+
+
 
