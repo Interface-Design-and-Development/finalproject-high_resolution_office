@@ -10,6 +10,7 @@ window.onload = () => {
     document.querySelectorAll(".app-window").forEach(win => {
     makeDraggable(win);
     attachPinButton(win);
+    attachDeleteButton(win)
 });
 };
 
@@ -109,8 +110,6 @@ function makeDraggable(el) {
   };
 }
 
-document.querySelectorAll(".app-window").forEach(makeDraggable);
-
 // Prevent dragging/resizing for pinned
 function lockWindow(el) {
   el.style.resize = "none";
@@ -134,13 +133,14 @@ document.getElementById("new-window-btn").addEventListener("click", () => {
 
   newWin.innerHTML = `
     <button class="pin-btn">📌</button>
-    <h3>App ${windowCount}</h3>
-  `;
+    <button class="delete-btn">🗑️</button>
+    <h3>App ${windowCount}</h3>`;
 
   document.body.appendChild(newWin);
 
   makeDraggable(newWin); // allow movement
   attachPinButton(newWin); // set up pin behavior
+  attachDeleteButton(newWin);
 });
 
 
@@ -157,6 +157,15 @@ function attachPinButton(winEl) {
       winEl.style.cursor = "move";
       makeDraggable(winEl);
       pinBtn.innerText = "📌";
+    }
+  });
+}
+
+function attachDeleteButton(winEl) {
+  const deleteBtn = winEl.querySelector(".delete-btn");
+  deleteBtn.addEventListener("click", () => {
+    if (confirm("Are you sure you want to delete this window?")) {
+      winEl.remove();
     }
   });
 }
