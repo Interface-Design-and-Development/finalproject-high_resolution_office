@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Privacy Settings</title>
-  <link rel="stylesheet" href="privacy.css"> <!-- Link to privacy.css -->
+  <link rel="stylesheet" href="privacy.css" />
 </head>
 <body>
 
-  <h1>Privacy Settings</h1>
+  <div class="container">
+    <h1>Privacy Settings</h1>
 
-  <form>
-    <label><input type="checkbox" name="profile_public"> Make my profile public</label><br><br>
-    <label><input type="checkbox" name="activity_visible"> Show my activity to others</label><br><br>
-    <label><input type="checkbox" name="data_sharing"> Allow data sharing with third parties</label><br><br>
-    <button type="submit">Save Privacy Settings</button>
-  </form>
+    <div class="settings">
+      <form>
+        <label><input type="checkbox" name="profile_public" /> Make my profile public</label><br /><br />
+        <label><input type="checkbox" name="activity_visible" /> Show my activity to others</label><br /><br />
+        <label><input type="checkbox" name="data_sharing" /> Allow data sharing with third parties</label><br /><br />
+        <label><input type="checkbox" name="two_factor_auth" /> Enable Two-Factor Authentication</label><br /><br />
+        <label><input type="checkbox" name="search_engine_index" /> Allow search engines to index my profile</label><br /><br />
+        <label><input type="checkbox" name="privacy_alerts" /> Receive privacy alerts</label><br /><br />
+        <button type="submit">Save Privacy Settings</button>
+      </form>
 
-  <p><a href="settings.html">← Back to Settings</a></p>
+      <p><a href="settings.html">← Back to Settings</a></p>
+    </div>
+  </div>
 
 </body>
 </html>
+
 
