@@ -90,6 +90,8 @@ header {
     position: relative;
 }
 
+
+
 /* ADD BUTTON */
 .new-button {
   position: fixed;
@@ -153,4 +155,17 @@ header {
 
 .settings-link:hover {
   text-decoration: underline;
+}
+.note {
+  background-color: #ffff88;
+  border: 1px solid #ccc;
+  padding: 10px;
+  resize: both;
+  overflow: auto;
+  position: absolute;
+  z-index: 1100;
+}
+
+.note-content {
+  min-height: 60px;
 }

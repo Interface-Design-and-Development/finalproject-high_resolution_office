@@ -9,6 +9,8 @@ window.onload = () => {
 
   if (currentUser.layout && currentUser.layout.length > 0) {
     loadLayout(currentUser);
+    loadLayout(currentUser); // For widgets
+    loadNotes(currentUser);  // For notes
   }
 
   const logoutBtn = document.getElementById("logout-btn");
@@ -115,7 +117,7 @@ function saveLayout() {
 // Save layout button
 const saveBtn = document.getElementById("save-layout-btn");
 if (saveBtn) {
-  saveBtn.addEventListener("click", saveLayout);
+  saveBtn.addEventListener("click", saveLayout,saveNotes);
 }
 
 document.getElementById("new-window-btn").addEventListener("click", () => {
@@ -203,4 +205,61 @@ function attachDeleteButton(winEl) {
       winEl.remove();
     }
   });
+}
+
+function saveNotes() {
+  const currentUser = loadUser();
+  if (!currentUser) return;
+
+  const notes = Array.from(document.querySelectorAll('.note')).map(note => {
+    const rect = note.getBoundingClientRect();
+    return {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+      content: note.querySelector('.note-content')?.innerHTML || ""
+    };
+  });
+
+  currentUser.notes = notes;
+
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const index = users.findIndex(u => u.email === currentUser.email);
+  if (index !== -1) {
+    users[index] = currentUser;
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+}
+
+function loadNotes(user) {
+  (user.notes || []).forEach(note => {
+    const noteEl = document.createElement("div");
+    noteEl.classList.add("note");
+    noteEl.style.position = "absolute";
+    noteEl.style.top = note.top + "px";
+    noteEl.style.left = note.left + "px";
+    noteEl.style.width = note.width + "px";
+    noteEl.style.height = note.height + "px";
+    noteEl.innerHTML = `
+      <div class="note-content" contenteditable="true">${note.content}</div>
+      <span class="delete-button" onclick="this.parentElement.remove()">🗑️</span>
+    `;
+    document.getElementById("dashContainer").appendChild(noteEl);
+  });
+}
+
+function addNote() {
+  const newNote = document.createElement('div');
+  newNote.className = 'note';
+  newNote.style.top = '120px';
+  newNote.style.left = '120px';
+  newNote.style.width = '150px';
+  newNote.style.height = '150px';
+  newNote.innerHTML = `
+    <div class="note-content" contenteditable="true">New Note</div>
+    <span class="delete-button" onclick="this.parentElement.remove()">🗑️</span>
+  `;
+  document.body.appendChild(newNote);
+  makeDraggable(newNote);
 }
