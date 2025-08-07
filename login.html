@@ -10,7 +10,7 @@
 
     </head>
 
-    <body>
+    <body onload="fadeInForm()">
         <div class="container">
             <form class="login-form">
                 <h2>Create Account</h2>
@@ -25,17 +25,18 @@
 
                 <!-- EMAIL INSERT -->
                 <label for="email">Email</label>
-                <input type="text" id="email" name="email" required/>
+                <input type="email" id="email" placeholder="Enter your email" name="email" required/>
 
                 <!-- PASSWORD INSERT -->
                  <label for="password">Password</label>
-                <input type="text" id="password" name="password" required/>
+                <input type="password" id="password" placeholder="Enter your password" name="password" required/>
 
                 <!-- SUBMIT BUTTON -->
-                 <button type="submit">Sign Up</button>
+                 <button type="Submit">Sign Up</button>
+                 <button type="Login">Login</button>
             </form>
         </div>
 
-
+        <script src="login.js"></script>
     </body>
 </html>
