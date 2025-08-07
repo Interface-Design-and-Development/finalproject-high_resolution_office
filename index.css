@@ -16,3 +16,14 @@
   overflow: auto;
   cursor: move;
 }
+.settings-link {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #007BFF;
+  font-weight: bold;
+}
+
+.settings-link:hover {
+  text-decoration: underline;
+}
+
