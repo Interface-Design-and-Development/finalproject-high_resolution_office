@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Group4 High Resolution Office</title>
+
+        <link rel="stylesheet" href="home.css" />
+    </head>
+
+<body>
+<!-- NAVIGATION BAR -->
+ <!-- NOTES: 
+ - FINISH REFERENCE LINKS
+ - ADJUSTIBLE SIZED BAR 
+ 
+ MAYBE:
+ - BE ABLE TO CHANGE SIDE BAR COLOR
+ - BE ABLE TO CHANGE FONT SIZE(FOR ACCESSIBILITY)
+ -->
+
+  <div class="sidebar">
+    <h2>Workspace</h2>
+    <ul>
+        <li>HOME<a href="login.html"></a></li>
+        <li>WHITEBOARD<a href="index.html"></a></li>
+        <li>NOTES<a href="login.html"></a></li>
+        <li>ACCOUNT<a href="login.html"></a></li>
+        <li>SETTINGS<a href="login.html"></a></li>
+    </ul>
+  </div>
+
+<!-- POST IT BASED TO DO LIST -->
+<!-- NOTES: 
+- BE ABLE TO CHANGE SIZE OF FONT AND POST IT SIZE
+- USER NEEDS TO BE ABLE TO INPUT THEIR OWN INFORMATION WITHIN THE NOTE
+
+MAYBES: 
+- BE ABLE TO CHANGE NOTE COLORS
+- GROUPING POST ITS WITHIN FOLDERS TO CONDENSE INFORMATION / TO DO LISTS
+- BEING ABLE TO FREELY ARRANGE POST ITS AROUND BOARD
+
+-->
+
+  <div class="main">
+    <h1>DASHBOARD</h1>
+    <div class="dash-container" id="dashContainer">
+      <div class="dashboard">
+        TO DO ITEM
+
+        <!-- DELETE BUTTON -->
+        <span class="delete-button" onclick="this.parentElement.remove()">X</span>
+      </div>
+      <!-- SPACE FOR MORE NOTES-->
+    </div>
+  </div>
+
+  <!-- ADD BUTTON -->
+  <button class="new-button" onclick="addNote()">+ New Note</button>
+
+  <script>
+    function addNote() {
+      const container = document.getElementById('dashContainer');
+      const newNote = document.createElement('div');
+      newNote.className = 'dashboard';
+      newNote.innerHTML = 'TO DO ITEM <span class="delete-button" onclick="this.parentElement.remove()">X</span>';
+      container.appendChild(newNote);
+    }
+  </script>
+
+    </body>
+</html>

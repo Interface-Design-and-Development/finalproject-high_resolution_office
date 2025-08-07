@@ -1,0 +1,101 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+/* NAVIGATION BAR*/
+.sidebar {
+    width: 160px;
+    background-color: #d9d9d9; 
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    position: fixed;
+    height: 100vh;
+}
+
+.sidebar li {
+    padding-bottom: 20px;
+    list-style: none;
+    font-size: 14px;
+    color: black;
+    cursor: pointer;
+}
+
+.sidebar li:hover {
+    font-weight: bold;
+}
+
+/* POST IT NOTES */
+.main {
+    margin-left: 160px;
+    padding: 40px;
+    flex: 1;
+}
+
+.dash-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 20px;
+}
+
+/* DASHBOARD ITEM BOX */
+.dashboard {
+    width: 100px;
+    height: 100px;
+    background-color: #d9d9d9; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: black;
+    text-align: center;
+    user-select: none;
+    position: relative;
+}
+
+/* ADD BUTTON */
+.new-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.new-button:hover {
+  background-color: #45a049;
+}
+
+/* DELETE BUTTON */
+.delete-button {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  display: none;
+}
+
+.dashboard:hover .delete-button {
+  display: block;
+}
+
