@@ -27,7 +27,7 @@ header {
   top: 0;
   height: 100vh;
   width: 40px;
-  z-index: 1001;
+  z-index: 99999;
 }
 
 .sidebar {
@@ -38,12 +38,11 @@ header {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  position: absolute;
   left: -140px; /* mostly hidden */
   top: 0;
   height: 100vh;
   transition: left 0.3s ease;
-  z-index: 1000;
+  z-index: 99999;
 }
 
 .sidebar-wrapper:hover .sidebar {
@@ -75,20 +74,7 @@ header {
     gap: 20px;
 }
 
-/* DASHBOARD ITEM BOX */
-.dashboard {
-    width: 100px;
-    height: 100px;
-    background-color: #d9d9d9; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: black;
-    text-align: center;
-    user-select: none;
-    position: relative;
-}
+
 
 
 
@@ -160,12 +146,23 @@ header {
   background-color: #ffff88;
   border: 1px solid #ccc;
   padding: 10px;
-  resize: both;
-  overflow: auto;
+  resize: none;
+  overflow: hidden;
   position: absolute;
-  z-index: 1100;
+  cursor: default;
+  z-index: 99998;
 }
 
+.note-header {
+  background: #ffd84d;
+  padding: 6px 8px;
+  font-weight: bold;
+  cursor: move;
+  user-select: none;
+}
 .note-content {
+  padding: 8px;
   min-height: 60px;
+  outline: none;
+  cursor: text;
 }

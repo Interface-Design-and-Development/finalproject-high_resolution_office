@@ -7,11 +7,9 @@ window.onload = () => {
 
   showWelcome(currentUser);
 
-  if (currentUser.layout && currentUser.layout.length > 0) {
-    loadLayout(currentUser);
-    loadLayout(currentUser); // For widgets
-    loadNotes(currentUser);  // For notes
-  }
+  // Always load both layout and notes
+  loadLayout(currentUser);
+  loadNotes(currentUser);
 
   const logoutBtn = document.getElementById("logout-btn");
   if (logoutBtn) {
@@ -22,15 +20,7 @@ window.onload = () => {
   }
 };
 
- 
-    function addNote() {
-      const container = document.getElementById('dashContainer');
-      const newNote = document.createElement('div');
-      newNote.className = 'dashboard';
-      newNote.innerHTML = 'TO DO ITEM <span class="delete-button" onclick="this.parentElement.remove()">X</span>';
-      container.appendChild(newNote);
-    };
-// Load the current user from localStorage
+// ======== USER DATA HANDLING ========
 function loadUser() {
   const users = JSON.parse(localStorage.getItem("users")) || [];
   const loggedInEmail = localStorage.getItem("loggedInUser");
@@ -42,13 +32,54 @@ function showWelcome(user) {
   welcomeMsg.innerText = `Welcome, ${user.firstName}`;
 }
 
+// ======== SAVE EVERYTHING IN ONE GO ========
+function saveUserState() {
+  const currentUser = loadUser();
+  if (!currentUser) return;
+
+  // Save layout
+  const layout = [];
+  document.querySelectorAll(".app-window").forEach(win => {
+    const rect = win.getBoundingClientRect();
+    layout.push({
+      id: win.id,
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+      pinned: win.classList.contains("pinned")
+    });
+  });
+  currentUser.layout = layout;
+
+  // Save notes
+  const notes = [];
+  document.querySelectorAll(".note").forEach(note => {
+    const rect = note.getBoundingClientRect();
+    notes.push({
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+      content: note.querySelector(".note-content")?.innerHTML || ""
+    });
+  });
+  currentUser.notes = notes;
+
+  // Write back
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const idx = users.findIndex(u => u.email === currentUser.email);
+  if (idx !== -1) {
+    users[idx] = currentUser;
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+}
+
+// ======== LAYOUT LOADING ========
 let windowCount = 0;
 
-// Create windows based on saved layout
 function loadLayout(user) {
-  const layout = user.layout || [];
-
-  layout.forEach(win => {
+  (user.layout || []).forEach(win => {
     const winEl = document.createElement("div");
     winEl.classList.add("app-window");
     winEl.id = win.id;
@@ -68,61 +99,50 @@ function loadLayout(user) {
     `;
 
     if (win.pinned) {
-      winEl.classList.add("pinned");
       lockWindow(winEl);
+      winEl.classList.add("pinned");
     }
 
     document.body.appendChild(winEl);
-    makeDraggable(winEl);
+    makeDraggable(winEl, ".window-header");
     attachPinButton(winEl);
     attachDeleteButton(winEl);
   });
 
-  if (layout.length > 0) {
-    windowCount = layout.length;
+  if (user.layout?.length > 0) {
+    windowCount = user.layout.length;
   }
 }
 
-function saveLayout() {
-  const currentUser = loadUser();
-  if (!currentUser) return;
+// ======== NOTES LOADING ========
+function loadNotes(user) {
+  (user.notes || []).forEach(n => {
+    const note = document.createElement("div");
+    note.className = "note";
+    note.style.position = "absolute";
+    note.style.top = n.top + "px";
+    note.style.left = n.left + "px";
+    note.style.width = n.width + "px";
+    note.style.height = n.height + "px";
 
-  const layout = [];
-  const windows = document.querySelectorAll(".app-window");
+    note.innerHTML = `
+      <div class="note-header">Note
+        <span class="delete-button">🗑️</span>
+      </div>
+      <div class="note-content" contenteditable="true">${n.content || ""}</div>
+    `;
 
-  windows.forEach(win => {
-    const rect = win.getBoundingClientRect();
-    layout.push({
-      id: win.id,
-      top: rect.top,
-      left: rect.left,
-      width: rect.width,
-      height: rect.height,
-      pinned: win.classList.contains("pinned")
-    });
+    document.body.appendChild(note);
+    makeDraggable(note, ".note-header"); // Draggable only
+    attachDeleteButton(note);
   });
-
-  currentUser.layout = layout;
-
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const userIndex = users.findIndex(u => u.email === currentUser.email);
-  if (userIndex !== -1) {
-    users[userIndex] = currentUser;
-    localStorage.setItem("users", JSON.stringify(users));
-  }
-
-  alert("Layout saved!");
 }
 
-// Save layout button
-const saveBtn = document.getElementById("save-layout-btn");
-if (saveBtn) {
-  saveBtn.addEventListener("click", saveLayout,saveNotes);
-}
+// ======== BUTTON ACTIONS ========
+document.getElementById("save-layout-btn").addEventListener("click", saveUserState);
 
 document.getElementById("new-window-btn").addEventListener("click", () => {
   windowCount++;
-
   const newWin = document.createElement("div");
   newWin.classList.add("app-window");
   newWin.id = `window-${windowCount}`;
@@ -143,27 +163,54 @@ document.getElementById("new-window-btn").addEventListener("click", () => {
   `;
 
   document.body.appendChild(newWin);
-
-  makeDraggable(newWin);
+  makeDraggable(newWin, ".window-header");
   attachPinButton(newWin);
   attachDeleteButton(newWin);
+  saveUserState();
 });
 
-function makeDraggable(winEl) {
-  const header = winEl.querySelector(".window-header");
-  if (!header) return;
+document.querySelector(".new-button").addEventListener("click", addNote);
+
+function addNote() {
+  const note = document.createElement("div");
+  note.className = "note";
+  note.style.top = "120px";
+  note.style.left = "120px";
+  note.style.width = "180px";
+  note.style.height = "150px";
+
+  note.innerHTML = `
+    <div class="note-header">Note
+      <span class="delete-button">🗑️</span>
+    </div>
+    <div class="note-content" contenteditable="true">New Note</div>
+  `;
+
+  document.body.appendChild(note);
+  makeDraggable(note, ".note-header");
+  attachDeleteButton(note);
+  saveUserState();
+}
+
+// ======== DRAGGING ========
+function makeDraggable(el, handleSelector) {
+  const handle = handleSelector ? el.querySelector(handleSelector) : el;
+  if (!handle) return;
 
   let offsetX, offsetY;
 
-  header.onmousedown = function (e) {
-    if (winEl.classList.contains("pinned")) return;
+  handle.onmousedown = function (e) {
+    if (e.target.closest(".note-content")) return; // Don't drag from inside editable text
+    offsetX = e.clientX - el.offsetLeft;
+    offsetY = e.clientY - el.offsetTop;
 
-    offsetX = e.clientX - winEl.offsetLeft;
-    offsetY = e.clientY - winEl.offsetTop;
+      if (!window.__topZ) window.__topZ = 1000;
+    window.__topZ = Math.min(window.__topZ + 1, 99997);
+    el.style.zIndex = window.__topZ;
 
     document.onmousemove = function (e) {
-      winEl.style.left = e.clientX - offsetX + "px";
-      winEl.style.top = e.clientY - offsetY + "px";
+      el.style.left = e.clientX - offsetX + "px";
+      el.style.top = e.clientY - offsetY + "px";
     };
 
     document.onmouseup = function () {
@@ -173,13 +220,14 @@ function makeDraggable(winEl) {
   };
 }
 
+// ======== PIN / DELETE ========
 function lockWindow(el) {
   el.style.resize = "none";
   el.style.cursor = "default";
 }
 
 function attachPinButton(winEl) {
-  const pinBtn = winEl.querySelector(".window-header .pin-btn");
+  const pinBtn = winEl.querySelector(".pin-btn");
   if (!pinBtn) return;
 
   pinBtn.addEventListener("click", () => {
@@ -193,73 +241,19 @@ function attachPinButton(winEl) {
       winEl.style.cursor = "move";
       pinBtn.innerText = "📌";
     }
+    saveUserState();
   });
 }
 
-function attachDeleteButton(winEl) {
-  const deleteBtn = winEl.querySelector(".window-header .delete-btn");
+function attachDeleteButton(el) {
+  const deleteBtn = el.querySelector(".delete-btn, .delete-button");
   if (!deleteBtn) return;
 
   deleteBtn.addEventListener("click", () => {
-    if (confirm("Are you sure you want to delete this window?")) {
-      winEl.remove();
+    const type = el.classList.contains("note") ? "note" : "window";
+    if (confirm(`Are you sure you want to delete this ${type}?`)) {
+      el.remove();
+      saveUserState();
     }
   });
-}
-
-function saveNotes() {
-  const currentUser = loadUser();
-  if (!currentUser) return;
-
-  const notes = Array.from(document.querySelectorAll('.note')).map(note => {
-    const rect = note.getBoundingClientRect();
-    return {
-      top: rect.top,
-      left: rect.left,
-      width: rect.width,
-      height: rect.height,
-      content: note.querySelector('.note-content')?.innerHTML || ""
-    };
-  });
-
-  currentUser.notes = notes;
-
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const index = users.findIndex(u => u.email === currentUser.email);
-  if (index !== -1) {
-    users[index] = currentUser;
-    localStorage.setItem("users", JSON.stringify(users));
-  }
-}
-
-function loadNotes(user) {
-  (user.notes || []).forEach(note => {
-    const noteEl = document.createElement("div");
-    noteEl.classList.add("note");
-    noteEl.style.position = "absolute";
-    noteEl.style.top = note.top + "px";
-    noteEl.style.left = note.left + "px";
-    noteEl.style.width = note.width + "px";
-    noteEl.style.height = note.height + "px";
-    noteEl.innerHTML = `
-      <div class="note-content" contenteditable="true">${note.content}</div>
-      <span class="delete-button" onclick="this.parentElement.remove()">🗑️</span>
-    `;
-    document.getElementById("dashContainer").appendChild(noteEl);
-  });
-}
-
-function addNote() {
-  const newNote = document.createElement('div');
-  newNote.className = 'note';
-  newNote.style.top = '120px';
-  newNote.style.left = '120px';
-  newNote.style.width = '150px';
-  newNote.style.height = '150px';
-  newNote.innerHTML = `
-    <div class="note-content" contenteditable="true">New Note</div>
-    <span class="delete-button" onclick="this.parentElement.remove()">🗑️</span>
-  `;
-  document.body.appendChild(newNote);
-  makeDraggable(newNote);
 }
