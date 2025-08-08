@@ -152,7 +152,7 @@ body {
 }
 .widget-button:hover { background: #dcdcdc; }
 
-/* ---------- SIDEBAR (slides out BELOW the fixed top bar) ---------- */
+/* ---------- SIDEBAR ---------- */
 .sidebar-wrapper {
   position: fixed;
   left: 0;
@@ -310,6 +310,21 @@ body.dark-mode .header-wrapper select{
   font-size: 14px;
 }
 
+body.dark-mode .sidebar{
+  background-color: #222;
+  
+}
+
+body.dark-mode .sidebar h4{
+  color: #ddd;
+}
+
+body.dark-mode .sidebar li {
+  padding: 8px 0;
+  list-style: none;
+  font-size: 14px;
+  color: #ddd
+}
 
 /* ---------- APP WINDOWS && WIDGETS ---------- */
 .app-window {
