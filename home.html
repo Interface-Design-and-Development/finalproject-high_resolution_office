@@ -6,155 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Group4 High Resolution Office</title>
   <link rel="stylesheet" href="home.css" />
-  <style>
-    /* Control Center styling */
-    .control-center-container {
-      position: fixed;
-      top: 50px; /* below header buttons */
-      right: 10px;
-      width: 220px;
-      background: #f1f1f1;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 15px;
-      display: none;
-      z-index: 10000;
-      color: black;
-    }
-    .control-center-toggle {
-      position: fixed;
-      top: 10px;
-      right: 60px; /* shifted left to make room for voice */
-      z-index: 10001;
-    }
-    .control-center-toggle button {
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    /* Voice button container */
-    .voice-talk-button {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 10002;
-    }
-    .voice-talk-button button {
-      padding: 8px 12px;
-      border-radius: 50%;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.3s ease;
-    }
-    .voice-talk-button button.listening {
-      background-color: #dc3545; /* red when listening */
-    }
-    .voice-talk-button button:hover {
-      background-color: #0056b3;
-    }
-
-    .control-center label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    .slider {
-      width: 100%;
-    }
-    .widget-button {
-      width: 100%;
-      margin-top: 10px;
-      padding: 6px;
-      border: none;
-      background-color: #ddd;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .widget-button:hover {
-      background-color: #bbb;
-    }
-
-    /* Header buttons container flex layout */
-    .header-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      background-color: #eee;
-    }
-
-    /* Header buttons styles */
-    .header-wrapper button,
-    #logout-btn,
-    #new-window-btn,
-    #settings,
-    #save-layout-btn {
-      flex: 0 0 auto;
-      width: auto;
-      padding: 6px 12px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      background-color: white;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.3s ease;
-      color: black;
-    }
-    .header-wrapper button:hover,
-    #logout-btn:hover,
-    #new-window-btn:hover,
-    #settings:hover,
-    #save-layout-btn:hover {
-      background-color: #ddd;
-    }
-
-    /* Dark mode styles */
-    body.dark-mode {
-      background-color: #121212;
-      color: #e0e0e0;
-    }
-    body.dark-mode .header-wrapper {
-      background-color: #1f1f1f;
-    }
-    body.dark-mode .header-wrapper button,
-    body.dark-mode #logout-btn,
-    body.dark-mode #new-window-btn,
-    body.dark-mode #settings,
-    body.dark-mode #save-layout-btn {
-      background-color: #333;
-      border-color: #444;
-      color: #eee;
-    }
-    body.dark-mode .header-wrapper button:hover,
-    body.dark-mode #logout-btn:hover,
-    body.dark-mode #new-window-btn:hover,
-    body.dark-mode #settings:hover,
-    body.dark-mode #save-layout-btn:hover {
-      background-color: #555;
-    }
-    body.dark-mode .control-center-container {
-      background-color: #222;
-      border-color: #444;
-      color: #eee;
-    }
-    body.dark-mode .widget-button {
-      background-color: #333;
-      color: #eee;
-    }
-    body.dark-mode .widget-button:hover {
-      background-color: #555;
-    }
-  </style>
+  
 </head>
 <body>
   <!-- Header with buttons -->
@@ -171,51 +23,20 @@
   <!-- Sidebar added exactly as original -->
   <div class="sidebar-wrapper">
     <div class="sidebar">
-      <h3>Workspace</h3>
+      <h4>Workspace</h4>
       <ul>
         <li><a href="home.html">HOME</a></li>
         <a href="whiteboard.html"><li>WHITEBOARD</li></a>
-        <a href="home.html"><li>NOTES</li></a>
-        <a href="account.html"><li>ACCOUNT</li></a>
         <a href="settings.html"><li>SETTINGS</li></a>
       </ul>
     </div>
-<!-- NAVIGATION BAR -->
- <!-- NOTES: 
- - ADJUSTIBLE SIZED BAR 
- 
- MAYBE:
- - BE ABLE TO CHANGE SIDE BAR COLOR
- - BE ABLE TO CHANGE FONT SIZE(FOR ACCESSIBILITY)
- -->
-
-  <div class="sidebar">
-    <h2>Workspace</h2>
-    <ul>
-        <li>HOME<a href="login.html"></a></li>
-        <li>WHITEBOARD<a href="whiteboard.html"></a></li>
-        <li>ACCOUNT<a href="account.html"></a></li>
-        <li>SETTINGS<a href="settings.html"></a></li>
-    </ul>
-  </div>
-
-<!-- POST IT BASED TO DO LIST -->
-<!-- NOTES: 
-- USER NEEDS TO BE ABLE TO INPUT THEIR OWN INFORMATION WITHIN THE NOTE
-
-MAYBES: 
-- BE ABLE TO CHANGE NOTE COLORS
-- GROUPING POST ITS WITHIN FOLDERS TO CONDENSE INFORMATION / TO DO LISTS
-- BEING ABLE TO FREELY ARRANGE POST ITS AROUND BOARD
-
--->
 
   <!-- Main dashboard content as in second HTML -->
   <div class="main">
-    <h1>DASHBOARD</h1>
+    
     <div class="dash-container" id="dashContainer">
       <div class="dashboard">
-        TO DO ITEM
+    
         <span class="delete-button" onclick="this.parentElement.remove()">X</span>
       </div>
     </div>

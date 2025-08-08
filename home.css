@@ -1,157 +1,218 @@
+/* ---------- VARIABLES & RESET ---------- */
+:root{
+  --header-height: 64px;
+  --header-bg: #007bff;
+  --accent: #4caf50;
+}
+
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body {
-    display: flex;
-    min-height: 100vh;
-    background-color: #ffffff;
+  min-height: 100vh;
+  background-color: #ffffff;
+  color: #222;
+  margin: 0;
+  display: block;
 }
- 
-header {
-  position: relative;
-  z-index: 100;
-  background-color: transparent;
-  height: auto;
-  text-align: end;
- }
 
-/* NAVIGATION BAR*/
-/* WRAPPER TO TRACK HOVER */
+/* ---------- TOP BAR (fixed) ---------- */
+.header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 20px;
+  background-color: var(--header-bg);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  z-index: 1000;
+}
+
+.header-wrapper h2 {
+  margin-right: auto;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.header-wrapper button,
+.header-wrapper a button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #ffffff;
+  color: #222;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.header-wrapper button:hover,
+.header-wrapper a button:hover {
+  background-color: #f1f1f1;
+}
+
+/* ---------- CONTROL CENTER + VOICE BUTTONS (bottom-right corner) ---------- */
+.control-center-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 70px;  /* leaves room for mic button */
+  z-index: 1100;
+}
+
+.voice-talk-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1100;
+}
+
+/* buttons styling */
+.control-center-toggle button,
+.voice-talk-button button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  font-size: 18px;
+  background: #ffffff;
+  color: #333;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease;
+}
+
+.voice-talk-button button {
+  width: 48px;
+  height: 48px;
+  background-color: #007bff;
+  color: white;
+}
+
+.voice-talk-button button.listening {
+  background-color: #dc3545; /* red when listening */
+}
+
+.control-center-toggle button:hover,
+.voice-talk-button button:hover {
+  background-color: #f1f1f1;
+}
+
+/* control center panel that opens upward */
+.control-center-container {
+  position: fixed;
+  bottom: 75px; /* sits just above the buttons */
+  right: 20px;
+  width: 240px;
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 14px;
+  display: none;
+  z-index: 1200;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transform-origin: bottom right;
+}
+
+/* small internals */
+.control-center-container label {
+  display: block;
+  margin-top: 8px;
+  font-weight: 600;
+  font-size: 13px;
+}
+.slider { width: 100%; }
+.widget-button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #e7e7e7;
+  cursor: pointer;
+  font-weight: 600;
+}
+.widget-button:hover { background: #dcdcdc; }
+
+/* ---------- SIDEBAR (slides out BELOW the fixed top bar) ---------- */
 .sidebar-wrapper {
   position: fixed;
   left: 0;
-  top: 0;
-  height: 100vh;
+  top: var(--header-height);
+  height: calc(100vh - var(--header-height));
   width: 40px;
-  z-index: 99999;
+  z-index: 900;
+  overflow: visible;
 }
 
 .sidebar {
   position: absolute;
   width: 160px;
   background-color: #d9d9d9;
-  padding: 40px 20px;
+  padding: 28px 18px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  left: -140px; /* mostly hidden */
+  gap: 20px;
+  left: -140px;
   top: 0;
-  height: 100vh;
-  transition: left 0.3s ease;
-  z-index: 99999;
+  height: 100%;
+  transition: left 0.28s ease;
+  z-index: 900;
+  box-shadow: 3px 0 10px rgba(0,0,0,0.05);
 }
 
-.sidebar-wrapper:hover .sidebar {
-  left: 0;
-}
+.sidebar-wrapper:hover .sidebar { left: 0; }
 
+.sidebar h4 { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 6px; }
+.sidebar ul { padding-left: 0; }
 .sidebar li {
-    padding-bottom: 20px;
-    list-style: none;
-    font-size: 14px;
-    color: black;
-    cursor: pointer;
-}
-
-.sidebar li:hover {
-    font-weight: bold;
-}
-
-/* POST IT NOTES */
-.main {
-    margin-left: 160px;
-    padding: 40px;
-    flex: 1;
-}
-
-.dash-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 20px;
-}
-
-
-
-
-
-/* ADD BUTTON */
-.new-button {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #4caf50;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-.new-button:hover {
-  background-color: #45a049;
-}
-
-/* DELETE BUTTON */
-.delete-button {
-  position: absolute;
-  top: 4px;
-  right: 6px;
+  padding: 8px 0;
+  list-style: none;
   font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  display: none;
+}
+.sidebar li a { text-decoration: none; color: inherit; }
+
+/* ---------- MAIN CONTENT (account for fixed top bar) ---------- */
+.main {
+  margin-left: 160px;
+  padding: calc(var(--header-height) + 16px) 40px 40px;
+  flex: 1;
 }
 
-.dashboard:hover .delete-button {
-  display: block;
+.main > header {
+  margin-top: 0;
+  padding: 0;
 }
 
-.app-window.pinned {
-  border: 2px solid red; /* or any visual you want */
+.main h1 {
+  font-size: 28px;
+  color: #222;
+  margin-bottom: 18px;
 }
 
-.app-window {
-  position: absolute;
-  top: 100px;
-  left: 100px;
-  width: 200px;
-  height: 200px;
-  background: #f1f1f1;
-  border: 1px solid #ccc;
-  padding: 10px;
-  resize: both;
-  overflow: auto;
-  cursor: move;
-  z-index: 1000;
-  box-shadow: #333;
-}
-.settings-link {
-  margin-right: 15px;
-  text-decoration: none;
-  color: #007BFF;
-  font-weight: bold;
+/* dash grid */
+.dash-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 20px;
 }
 
-.settings-link:hover {
-  text-decoration: underline;
-}
+/* notes / app windows */
 .note {
   background-color: #ffff88;
-  border: 1px solid #ccc;
+  border: 1px solid #d0cba0;
   padding: 10px;
-  resize: none;
-  overflow: hidden;
   position: absolute;
   cursor: default;
-  z-index: 99998;
+  z-index: 800;
 }
 
 .note-header {
@@ -161,9 +222,67 @@ header {
   cursor: move;
   user-select: none;
 }
+
 .note-content {
   padding: 8px;
   min-height: 60px;
   outline: none;
   cursor: text;
+}
+
+/* new-note button */
+.new-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--accent);
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+/* delete button shown on hover */
+.delete-button {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  display: none;
+}
+.dashboard:hover .delete-button { display: block; }
+
+/* ---------- DARK MODE VARIATIONS ---------- */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode .header-wrapper button,
+body.dark-mode .header-wrapper a button {
+  background-color: #333;
+  color: #eee;
+}
+
+body.dark-mode .control-center-container {
+  background-color: #222;
+  border-color: #333;
+  color: #ddd;
+}
+body.dark-mode .widget-button { background-color: #333; color: #eee; }
+
+
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 600px) {
+  .main { padding-left: 16px; padding-right: 16px; margin-left: 120px; }
+  .sidebar { width: 140px; left: -124px; }
+  .header-wrapper h2 { font-size: 16px; }
 }
