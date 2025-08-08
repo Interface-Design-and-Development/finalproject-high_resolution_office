@@ -18,6 +18,10 @@ window.onload = () => {
       window.location.href = "start.html";
     });
   }
+  const saveBtn = document.getElementById("save-layout-btn");
+    if (saveBtn) {
+    saveBtn.addEventListener("click", saveUserState);
+    }
 };
 
 // ======== USER DATA HANDLING ========
@@ -74,6 +78,8 @@ function saveUserState() {
     users[idx] = currentUser;
     localStorage.setItem("users", JSON.stringify(users));
   }
+  console.log("saveUserState(): wrote user state");
+  showToast("Layout saved ✔️", 5000); // disappears in 2.5 seconds
 }
 
 // ======== LAYOUT LOADING ========
@@ -140,6 +146,22 @@ function loadNotes(user) {
     makeDraggable(note, ".note-header"); // Draggable only
     attachDeleteButton(note);
   });
+}
+
+function showToast(message, duration = 10000) {
+  const container = document.getElementById("toast-container");
+  if (!container){console.warn("no toast container"); return;}
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  // Remove after duration
+  setTimeout(() => {
+    toast.style.animation = "fadeOut 0.3s ease forwards";
+    toast.addEventListener("animationend", () => toast.remove(),{once:true});
+  }, duration);
 }
 
 // ======== BUTTON ACTIONS ========
