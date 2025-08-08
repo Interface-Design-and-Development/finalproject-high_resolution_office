@@ -18,6 +18,10 @@ window.onload = () => {
       window.location.href = "start.html";
     });
   }
+  const saveBtn = document.getElementById("save-layout-btn");
+    if (saveBtn) {
+    saveBtn.addEventListener("click", saveUserState);
+    }
 };
 
 // ======== USER DATA HANDLING ========
@@ -47,7 +51,8 @@ function saveUserState() {
       left: rect.left,
       width: rect.width,
       height: rect.height,
-      pinned: win.classList.contains("pinned")
+      pinned: win.classList.contains("pinned"),
+      type: win.dataset.type || "App"
     });
   });
   currentUser.layout = layout;
@@ -73,6 +78,8 @@ function saveUserState() {
     users[idx] = currentUser;
     localStorage.setItem("users", JSON.stringify(users));
   }
+  console.log("saveUserState(): wrote user state");
+  showToast("Layout saved ✔️", 5000); // disappears in 2.5 seconds
 }
 
 // ======== LAYOUT LOADING ========
@@ -89,13 +96,15 @@ function loadLayout(user) {
     winEl.style.height = win.height + "px";
     winEl.style.position = "absolute";
     winEl.style.resize = win.pinned ? "none" : "both";
+    winEl.dataset.type = win.type || "App";
 
     winEl.innerHTML = `
       <div class="window-header">
         <button class="pin-btn">${win.pinned ? "📍" : "📌"}</button>
         <button class="delete-btn">🗑️</button>
-        <h3>${win.id}</h3>
+        <h3>${win.type || "App"}</h3>
       </div>
+      <div class="widget-content">Loading..</div>
     `;
 
     if (win.pinned) {
@@ -107,6 +116,7 @@ function loadLayout(user) {
     makeDraggable(winEl, ".window-header");
     attachPinButton(winEl);
     attachDeleteButton(winEl);
+    renderWidgetContent(winEl);
   });
 
   if (user.layout?.length > 0) {
@@ -138,36 +148,36 @@ function loadNotes(user) {
   });
 }
 
+function showToast(message, duration = 10000) {
+  const container = document.getElementById("toast-container");
+  if (!container){console.warn("no toast container"); return;}
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  // Remove after duration
+  setTimeout(() => {
+    toast.style.animation = "fadeOut 0.3s ease forwards";
+    toast.addEventListener("animationend", () => toast.remove(),{once:true});
+  }, duration);
+}
+
 // ======== BUTTON ACTIONS ========
-document.getElementById("save-layout-btn").addEventListener("click", saveUserState);
-
 document.getElementById("new-window-btn").addEventListener("click", () => {
-  windowCount++;
-  const newWin = document.createElement("div");
-  newWin.classList.add("app-window");
-  newWin.id = `window-${windowCount}`;
-  newWin.style.top = "100px";
-  newWin.style.left = "100px";
-  newWin.style.width = "200px";
-  newWin.style.height = "150px";
-  newWin.style.position = "absolute";
-  newWin.style.resize = "both";
-
-  newWin.innerHTML = `
-    <div class="window-header">
-      <button class="pin-btn">📌</button>
-      <button class="delete-btn">🗑️</button>
-      <h3>${newWin.id}</h3>
-    </div>
-    <p>Window content here</p>
-  `;
-
-  document.body.appendChild(newWin);
-  makeDraggable(newWin, ".window-header");
-  attachPinButton(newWin);
-  attachDeleteButton(newWin);
-  saveUserState();
+  const sel = document.getElementById("widget-type");
+  const raw = sel ? sel.value : null;
+  const type = normalizeType(raw);
+  createWidget(type);
 });
+
+function normalizeType(t) {
+  if (!t || typeof t !== "string") return "Weather";
+  const norm = t.trim().toLowerCase();
+  const map = { weather:"Weather", calendar:"Calendar", clock:"Clock", news:"News", stocks:"Stocks", quote:"Quote" };
+  return map[norm] || "Weather";
+}
 
 document.querySelector(".new-button").addEventListener("click", addNote);
 
@@ -257,3 +267,157 @@ function attachDeleteButton(el) {
     }
   });
 }
+
+function createWidget(type) {
+  const widget = document.createElement("div");
+  widget.className = "app-window";
+  widget.id = `window-${Date.now()}`;
+  widget.style.top = "100px";
+  widget.style.left = "100px";
+  widget.style.width = "220px";
+  widget.style.height = "160px";
+  widget.style.position = "absolute";
+  widget.dataset.type = type; //store widget type on the element
+
+  widget.innerHTML = `
+    <div class="window-header">
+      <button class="pin-btn">📌</button>
+      <button class="delete-btn">🗑️</button>
+      <h3>${type} Widget</h3>
+    </div>
+    <div class="widget-content">Loading ${type}...</div>
+  `;
+
+  document.body.appendChild(widget);
+
+  makeDraggable(widget, ".window-header");
+  attachPinButton(widget);
+  attachDeleteButton(widget);
+
+  // Populate content
+  renderWidgetContent(widget);
+
+  // Persist right away
+  saveUserState();
+}
+
+function renderWidgetContent(winEl) {
+  const type = winEl.dataset.type;
+  const target = winEl.querySelector(".widget-content");
+  if (!target) return;
+
+  const renderers = {
+    Weather: async () => {
+      const d = await fetchMockWeather();
+      target.innerHTML = `
+        <div><strong>${d.location}</strong></div>
+        <div>${d.temperature}, ${d.condition}</div>
+      `;
+    },
+    Calendar: async () => {
+      const events = await fetchMockCalendar();
+      target.innerHTML = `
+        <div><strong>${new Date().toDateString()}</strong></div>
+        <ul style="margin:6px 0 0 16px;">
+          ${events.map(e => `<li>${e.time} — ${e.title}</li>`).join("")}
+        </ul>
+      `;
+    },
+    Clock: () => {
+      target.innerHTML = `<div style="font-size:22px" id="clock-${winEl.id}"></div>`;
+      const el = target.querySelector(`#clock-${CSS.escape(winEl.id)}`);
+      const tick = () => el && (el.textContent = new Date().toLocaleTimeString());
+      tick();
+      const timerId = setInterval(tick, 1000);
+      // store a cleanup if you want later
+      winEl.__timerId = timerId;
+    },
+    News: async () => {
+      const items = await fetchMockNews();
+      target.innerHTML = `
+        <ul style="margin-left:16px;">
+          ${items.map(n => `<li>${n.title}</li>`).join("")}
+        </ul>
+      `;
+    },
+    Stocks: async () => {
+      const quotes = await fetchMockStocks();
+      target.innerHTML = `
+        <div><strong>${quotes.symbol}</strong></div>
+        <div>Price: ${quotes.price}</div>
+        <div>Change: ${quotes.change}</div>
+      `;
+    },
+    Quote: async () => {
+      const q = await fetchMockQuote();
+      target.innerHTML = `
+        <div style="font-style:italic">"${q.text}"</div>
+        <div style="margin-top:6px">— ${q.author}</div>
+      `;
+    }
+  };
+
+  // call the appropriate renderer, or default
+  if (renderers[type]) {
+    renderers[type]();
+  } else {
+    target.textContent = "Unknown widget";
+  }
+}
+
+function fetchMockWeather() {
+  return new Promise(res => {
+    setTimeout(() => {
+      res({ location: "Dallas, TX", temperature: "84°F", condition: "Sunny" });
+    }, 500);
+  });
+}
+
+function fetchMockCalendar() {
+  return new Promise(res => {
+    setTimeout(() => {
+      res([
+        { time: "9:00 AM",  title: "Team Standup" },
+        { time: "1:30 PM",  title: "Client Sync" },
+        { time: "4:00 PM",  title: "Design Review" }
+      ]);
+    }, 500);
+  });
+}
+
+function fetchMockNews() {
+  return new Promise(res => {
+    setTimeout(() => {
+      res([
+        { title: "AI tools boost productivity in small teams" },
+        { title: "New display tech promises 3x resolution" },
+        { title: "UX trends: dense dashboards are back" }
+      ]);
+    }, 600);
+  });
+}
+
+function fetchMockStocks() {
+  return new Promise(res => {
+    setTimeout(() => {
+      const price = (100 + Math.random() * 20).toFixed(2);
+      const change = ((Math.random() - 0.5) * 2).toFixed(2);
+      res({ symbol: "ACME", price: `$${price}`, change: `${change}%` });
+    }, 600);
+  });
+}
+
+function fetchMockQuote() {
+  return new Promise(res => {
+    setTimeout(() => {
+      const quotes = [
+        { text: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
+        { text: "Make it work, make it right, make it fast.", author: "Kent Beck" },
+        { text: "Perfection is achieved by subtraction.", author: "Antoine de Saint-Exupéry" }
+      ];
+      res(quotes[Math.floor(Math.random() * quotes.length)]);
+    }, 400);
+  });
+}
+
+
