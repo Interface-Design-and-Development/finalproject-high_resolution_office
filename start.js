@@ -9,7 +9,7 @@ window.onload = function () {
   if(loggedInEmail){
     window.location.href = "index.html";
   }
-  
+
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -29,7 +29,7 @@ window.onload = function () {
     //keeps track of logged in user
       localStorage.setItem("loggedInUser", matchedUser.email);
       alert(`Welcome back, ${matchedUser.firstName}!`);
-      window.location.href = "index.html";
+      window.location.href = "home.html";
     } else {
       alert("Incorrect username or password.");
     }

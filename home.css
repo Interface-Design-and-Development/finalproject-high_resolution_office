@@ -131,6 +131,7 @@ header {
   overflow: auto;
   cursor: move;
   z-index: 1000;
+  box-shadow: #333;
 }
 .settings-link {
   margin-right: 15px;
