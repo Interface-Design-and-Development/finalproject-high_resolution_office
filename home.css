@@ -20,7 +20,7 @@ body {
   display: block;
 }
 
-/* ---------- TOP BAR (fixed) ---------- */
+/* ---------- TOP BAR ---------- */
 .header-wrapper {
   position: fixed;
   top: 0;
@@ -46,6 +46,16 @@ body {
 
 .header-wrapper button,
 .header-wrapper a button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #ffffff;
+  color: #222;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.header-wrapper select{
   padding: 6px 12px;
   border-radius: 8px;
   border: none;
@@ -259,6 +269,7 @@ body {
 }
 .dashboard:hover .delete-button { display: block; }
 
+
 /* ---------- DARK MODE VARIATIONS ---------- */
 body.dark-mode {
   background-color: #121212;
@@ -278,6 +289,12 @@ body.dark-mode .control-center-container {
 }
 body.dark-mode .widget-button { background-color: #333; color: #eee; }
 
+/* ---------- APP WINDOWS && WIDGETS ---------- */
+.app-window {
+  border-radius: 8px; 
+  border: 1px solid #ccc;
+  overflow: hidden; 
+}
 
 
 /* ---------- RESPONSIVE ---------- */
