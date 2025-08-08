@@ -299,17 +299,6 @@ body.dark-mode .control-center-container {
   color: #ddd;
 }
 body.dark-mode .widget-button { background-color: #333; color: #eee; }
-
-body.dark-mode .header-wrapper select{
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: none;
-  background-color: #333;
-  color: #ddd;
-  cursor: pointer;
-  font-size: 14px;
-}
-
 body.dark-mode .sidebar{
   background-color: #222;
   
@@ -329,8 +318,9 @@ body.dark-mode .sidebar li {
 /* ---------- APP WINDOWS && WIDGETS ---------- */
 .app-window {
   border-radius: 8px; 
-  border: 1px solid #333;
-  overflow: hidden; 
+  border: 1px solid #ccc;
+  overflow: hidden;
+  resize: both;
 }
 
 
