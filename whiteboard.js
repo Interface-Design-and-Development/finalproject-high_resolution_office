@@ -18,6 +18,7 @@ let startY;
 toolbar.addEventListener('click', e => {
     if (e.target.id === 'clear') {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        saveUserState();
     }
 });
 
@@ -54,6 +55,7 @@ canvas.addEventListener('mouseup', e => {
     isPainting = false;
     ctx.stroke();
     ctx.beginPath();
+    saveUserState();
 });
 
 canvas.addEventListener('mousemove', draw);
