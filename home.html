@@ -1,14 +1,185 @@
+
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Group4 High Resolution Office</title>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Group4 High Resolution Office</title>
+  <link rel="stylesheet" href="home.css" />
+  <style>
+    /* Control Center styling */
+    .control-center-container {
+      position: fixed;
+      top: 50px; /* below header buttons */
+      right: 10px;
+      width: 220px;
+      background: #f1f1f1;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 15px;
+      display: none;
+      z-index: 10000;
+      color: black;
+    }
+    .control-center-toggle {
+      position: fixed;
+      top: 10px;
+      right: 60px; /* shifted left to make room for voice */
+      z-index: 10001;
+    }
+    .control-center-toggle button {
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-        <link rel="stylesheet" href="home.css" />
-    </head>
+    /* Voice button container */
+    .voice-talk-button {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 10002;
+    }
+    .voice-talk-button button {
+      padding: 8px 12px;
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+    }
+    .voice-talk-button button.listening {
+      background-color: #dc3545; /* red when listening */
+    }
+    .voice-talk-button button:hover {
+      background-color: #0056b3;
+    }
 
+    .control-center label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .slider {
+      width: 100%;
+    }
+    .widget-button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 6px;
+      border: none;
+      background-color: #ddd;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .widget-button:hover {
+      background-color: #bbb;
+    }
+
+    /* Header buttons container flex layout */
+    .header-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background-color: #eee;
+    }
+
+    /* Header buttons styles */
+    .header-wrapper button,
+    #logout-btn,
+    #new-window-btn,
+    #settings,
+    #save-layout-btn {
+      flex: 0 0 auto;
+      width: auto;
+      padding: 6px 12px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: white;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+      color: black;
+    }
+    .header-wrapper button:hover,
+    #logout-btn:hover,
+    #new-window-btn:hover,
+    #settings:hover,
+    #save-layout-btn:hover {
+      background-color: #ddd;
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    body.dark-mode .header-wrapper {
+      background-color: #1f1f1f;
+    }
+    body.dark-mode .header-wrapper button,
+    body.dark-mode #logout-btn,
+    body.dark-mode #new-window-btn,
+    body.dark-mode #settings,
+    body.dark-mode #save-layout-btn {
+      background-color: #333;
+      border-color: #444;
+      color: #eee;
+    }
+    body.dark-mode .header-wrapper button:hover,
+    body.dark-mode #logout-btn:hover,
+    body.dark-mode #new-window-btn:hover,
+    body.dark-mode #settings:hover,
+    body.dark-mode #save-layout-btn:hover {
+      background-color: #555;
+    }
+    body.dark-mode .control-center-container {
+      background-color: #222;
+      border-color: #444;
+      color: #eee;
+    }
+    body.dark-mode .widget-button {
+      background-color: #333;
+      color: #eee;
+    }
+    body.dark-mode .widget-button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
 <body>
+  <!-- Header with buttons -->
+  <header>
+    <div class="header-wrapper">
+      <h2 id="welcome-msg">Welcome!</h2>
+      <button id="logout-btn">Logout</button>
+      <button id="new-window-btn">➕ New App</button>
+      <a href="settings.html"><button id="settings">Settings</button></a>
+      <button id="save-layout-btn">Save Layout</button>
+    </div>
+  </header>
+
+  <!-- Sidebar added exactly as original -->
+  <div class="sidebar-wrapper">
+    <div class="sidebar">
+      <h3>Workspace</h3>
+      <ul>
+        <li><a href="home.html">HOME</a></li>
+        <a href="whiteboard.html"><li>WHITEBOARD</li></a>
+        <a href="home.html"><li>NOTES</li></a>
+        <a href="account.html"><li>ACCOUNT</li></a>
+        <a href="settings.html"><li>SETTINGS</li></a>
+      </ul>
+    </div>
 <!-- NAVIGATION BAR -->
  <!-- NOTES: 
  - ADJUSTIBLE SIZED BAR 
@@ -39,31 +210,133 @@ MAYBES:
 
 -->
 
+  <!-- Main dashboard content as in second HTML -->
   <div class="main">
     <h1>DASHBOARD</h1>
     <div class="dash-container" id="dashContainer">
       <div class="dashboard">
         TO DO ITEM
-
-        <!-- DELETE BUTTON -->
         <span class="delete-button" onclick="this.parentElement.remove()">X</span>
       </div>
-      <!-- SPACE FOR MORE NOTES-->
     </div>
+
+    <button class="new-button" onclick="addNote()">+ New Note</button>
   </div>
 
-  <!-- ADD BUTTON -->
-  <button class="new-button" onclick="addNote()">+ New Note</button>
+  <!-- Control Center Toggle Button -->
+  <div class="control-center-toggle">
+    <button id="controlCenterToggleBtn">☰ Control Center</button>
+  </div>
+
+  <!-- Voice to Talk Button -->
+  <div class="voice-talk-button">
+    <button id="voiceTalkBtn" title="Click and speak">🎤</button>
+  </div>
+
+  <!-- Control Center Panel -->
+  <div class="control-center-container" id="controlCenter">
+    <label for="volumeRange">Volume</label>
+    <input id="volumeRange" type="range" class="slider" min="0" max="100" value="50" />
+
+    <label for="brightnessRange">Brightness</label>
+    <input id="brightnessRange" type="range" class="slider" min="10" max="100" value="100" />
+
+    <button class="widget-button" id="toggleBluetoothBtn">Toggle Bluetooth</button>
+    <button class="widget-button" id="toggleWifiBtn">Toggle Wi-Fi</button>
+    <button class="widget-button" id="toggleDarkModeBtn">Toggle Dark Mode</button>
+    <button class="widget-button" id="openCalculatorBtn">Open Calculator</button>
+  </div>
+
+  <script src="home.js"></script>
 
   <script>
-    function addNote() {
-      const container = document.getElementById('dashContainer');
-      const newNote = document.createElement('div');
-      newNote.className = 'dashboard';
-      newNote.innerHTML = 'TO DO ITEM <span class="delete-button" onclick="this.parentElement.remove()">X</span>';
-      container.appendChild(newNote);
+    const controlCenterToggleBtn = document.getElementById('controlCenterToggleBtn');
+    const controlCenter = document.getElementById('controlCenter');
+
+    controlCenterToggleBtn.addEventListener('click', () => {
+      controlCenter.style.display = controlCenter.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.getElementById('volumeRange').addEventListener('input', e => {
+      console.log('Volume:', e.target.value);
+      // Implement volume logic here
+    });
+
+    document.getElementById('brightnessRange').addEventListener('input', e => {
+      document.body.style.filter = `brightness(${e.target.value}%)`;
+    });
+
+    document.getElementById('toggleBluetoothBtn').addEventListener('click', () => {
+      alert('Bluetooth toggled!');
+    });
+
+    document.getElementById('toggleWifiBtn').addEventListener('click', () => {
+      alert('Wi-Fi toggled!');
+    });
+
+    document.getElementById('toggleDarkModeBtn').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    document.getElementById('openCalculatorBtn').addEventListener('click', () => {
+      window.open('https://www.google.com/search?q=calculator', '_blank');
+    });
+
+    // Voice to talk feature using Web Speech API
+    const voiceTalkBtn = document.getElementById('voiceTalkBtn');
+    let recognition;
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        voiceTalkBtn.classList.add('listening');
+        voiceTalkBtn.title = 'Listening... Click to stop';
+      };
+
+      recognition.onend = () => {
+        voiceTalkBtn.classList.remove('listening');
+        voiceTalkBtn.title = 'Click and speak';
+      };
+
+      recognition.onerror = (event) => {
+        alert('Error occurred in recognition: ' + event.error);
+        voiceTalkBtn.classList.remove('listening');
+      };
+
+      recognition.onresult = (event) => {
+        const speechResult = event.results[0][0].transcript;
+        alert('You said: ' + speechResult);
+        // You can replace alert with any function to handle the speech result
+      };
+
+      voiceTalkBtn.addEventListener('click', () => {
+        if (voiceTalkBtn.classList.contains('listening')) {
+          recognition.stop();
+        } else {
+          recognition.start();
+        }
+      });
+    } else {
+      voiceTalkBtn.disabled = true;
+      voiceTalkBtn.title = 'Speech recognition not supported in this browser';
     }
   </script>
-
-    </body>
+</body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

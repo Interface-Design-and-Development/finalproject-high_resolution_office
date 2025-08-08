@@ -6,7 +6,6 @@ body {
   justify-content: center;
   align-items: center;
   height: auto;
-
 }
 .container {
   background: white;
@@ -36,8 +35,8 @@ body {
     margin-bottom: -0.5px;
 }
 .container label{
-    font-size:small;
-    color:rgb(24, 24, 23)
+    font-weight: bold;
+    color: #1f60a6;
 }
 .container input{
     color:#007bff

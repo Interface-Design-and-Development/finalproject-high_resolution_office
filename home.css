@@ -10,17 +10,43 @@ body {
     min-height: 100vh;
     background-color: #ffffff;
 }
+ 
+header {
+  position: relative;
+  z-index: 100;
+  background-color: transparent;
+  height: auto;
+  text-align: end;
+ }
 
 /* NAVIGATION BAR*/
+/* WRAPPER TO TRACK HOVER */
+.sidebar-wrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 40px;
+  z-index: 99999;
+}
+
 .sidebar {
-    width: 160px;
-    background-color: #d9d9d9; 
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    position: fixed;
-    height: 100vh;
+  position: absolute;
+  width: 160px;
+  background-color: #d9d9d9;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  left: -140px; /* mostly hidden */
+  top: 0;
+  height: 100vh;
+  transition: left 0.3s ease;
+  z-index: 99999;
+}
+
+.sidebar-wrapper:hover .sidebar {
+  left: 0;
 }
 
 .sidebar li {
@@ -48,20 +74,9 @@ body {
     gap: 20px;
 }
 
-/* DASHBOARD ITEM BOX */
-.dashboard {
-    width: 100px;
-    height: 100px;
-    background-color: #d9d9d9; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: black;
-    text-align: center;
-    user-select: none;
-    position: relative;
-}
+
+
+
 
 /* ADD BUTTON */
 .new-button {
@@ -99,3 +114,56 @@ body {
   display: block;
 }
 
+.app-window.pinned {
+  border: 2px solid red; /* or any visual you want */
+}
+
+.app-window {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 200px;
+  height: 200px;
+  background: #f1f1f1;
+  border: 1px solid #ccc;
+  padding: 10px;
+  resize: both;
+  overflow: auto;
+  cursor: move;
+  z-index: 1000;
+  box-shadow: #333;
+}
+.settings-link {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #007BFF;
+  font-weight: bold;
+}
+
+.settings-link:hover {
+  text-decoration: underline;
+}
+.note {
+  background-color: #ffff88;
+  border: 1px solid #ccc;
+  padding: 10px;
+  resize: none;
+  overflow: hidden;
+  position: absolute;
+  cursor: default;
+  z-index: 99998;
+}
+
+.note-header {
+  background: #ffd84d;
+  padding: 6px 8px;
+  font-weight: bold;
+  cursor: move;
+  user-select: none;
+}
+.note-content {
+  padding: 8px;
+  min-height: 60px;
+  outline: none;
+  cursor: text;
+}

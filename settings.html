@@ -1,9 +1,22 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Settings Page</title>
   <link rel="stylesheet" href="settings.css">
+  <style>
+    /* Add these if you want the high contrast and disable animations styles here or ensure they're in settings.css */
+    .high-contrast {
+      background-color: black !important;
+      color: yellow !important;
+      filter: none !important;
+    }
+    .disable-animations * {
+      animation: none !important;
+      transition: none !important;
+    }
+  </style>
 </head>
 <body>
   <h1>Settings</h1>
@@ -19,7 +32,51 @@
   </ul>
 
   <!-- Back button to main page -->
-  <a href="index.html" class="back-button">← Back to Main Page</a>
+  <a href="home.html" class="back-button">← Back to Main Page</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('displaySettings');
+      if (!saved) return;
+      const settings = JSON.parse(saved);
+
+      // Apply theme colors
+      if (settings.theme === 'light') {
+        document.body.style.backgroundColor = 'white';
+        document.body.style.color = 'black';
+      } else if (settings.theme === 'dark') {
+        document.body.style.backgroundColor = '#121212';
+        document.body.style.color = 'white';
+      } else {
+        document.body.style.backgroundColor = '';
+        document.body.style.color = '';
+      }
+
+      // Font size
+      document.body.style.fontSize = settings.fontSize === 'small' ? '12px' :
+                                     settings.fontSize === 'large' ? '20px' : '16px';
+
+      // Brightness and contrast filters
+      document.body.style.filter = `brightness(${settings.brightness || 100}%) contrast(${settings.contrast || 100}%)`;
+
+      // Text alignment
+      document.body.style.textAlign = settings.textAlign || 'left';
+
+      // High contrast mode (add/remove class)
+      if (settings.highContrast) {
+        document.body.classList.add('high-contrast');
+      } else {
+        document.body.classList.remove('high-contrast');
+      }
+
+      // Disable animations (add/remove class)
+      if (settings.disableAnimations) {
+        document.body.classList.add('disable-animations');
+      } else {
+        document.body.classList.remove('disable-animations');
+      }
+    });
+  </script>
 </body>
 </html>
 

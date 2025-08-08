@@ -5,6 +5,19 @@
   <meta charset="UTF-8" />
   <title>Display Settings</title>
   <link rel="stylesheet" href="display.css" />
+  <style>
+    /* High contrast mode */
+    .high-contrast {
+      background-color: black !important;
+      color: yellow !important;
+      filter: none !important; /* override filters */
+    }
+    /* Disable animations */
+    .disable-animations * {
+      animation: none !important;
+      transition: none !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -17,7 +30,7 @@
         <select id="theme" name="theme">
           <option value="light">Light</option>
           <option value="dark">Dark</option>
-          <option value="system">System Default</option>
+          <option value="system" selected>System Default</option>
         </select>
         <br /><br />
 
@@ -31,12 +44,12 @@
 
         <!-- Brightness -->
         <label for="brightness">Brightness:</label>
-        <input type="range" id="brightness" name="brightness" min="0" max="100" value="50" />
+        <input type="range" id="brightness" name="brightness" min="0" max="100" value="100" />
         <br /><br />
 
         <!-- Contrast -->
         <label for="contrast">Contrast:</label>
-        <input type="range" id="contrast" name="contrast" min="0" max="100" value="50" />
+        <input type="range" id="contrast" name="contrast" min="0" max="100" value="100" />
         <br /><br />
 
         <!-- Text Alignment -->
@@ -66,6 +79,161 @@
       <p><a href="settings.html" class="back-button">← Back to Settings</a></p>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const themeSelect = document.getElementById('theme');
+      const fontSizeSelect = document.getElementById('fontsize');
+      const brightnessRange = document.getElementById('brightness');
+      const contrastRange = document.getElementById('contrast');
+      const textAlignSelect = document.getElementById('textAlign');
+      const highContrastCheckbox = document.getElementById('highcontrast');
+      const animationsCheckbox = document.getElementById('animations');
+      const form = document.querySelector('form');
+
+      // Save all settings to localStorage
+      function saveSettings() {
+        const settings = {
+          theme: themeSelect.value,
+          fontSize: fontSizeSelect.value,
+          brightness: brightnessRange.value,
+          contrast: contrastRange.value,
+          textAlign: textAlignSelect.value,
+          highContrast: highContrastCheckbox.checked,
+          disableAnimations: animationsCheckbox.checked
+        };
+        localStorage.setItem('displaySettings', JSON.stringify(settings));
+      }
+
+      // Load settings from localStorage, return null if none saved
+      function loadSettings() {
+        const saved = localStorage.getItem('displaySettings');
+        return saved ? JSON.parse(saved) : null;
+      }
+
+      // Apply theme by toggling body classes for light/dark
+      function applyTheme(theme) {
+        document.body.classList.remove('theme-light', 'theme-dark');
+        if (theme === 'light') {
+          document.body.classList.add('theme-light');
+          document.body.style.backgroundColor = 'white';
+          document.body.style.color = 'black';
+        } else if (theme === 'dark') {
+          document.body.classList.add('theme-dark');
+          document.body.style.backgroundColor = '#121212';
+          document.body.style.color = 'white';
+        } else {
+          // system default: clear inline styles for background and color
+          document.body.style.backgroundColor = '';
+          document.body.style.color = '';
+        }
+      }
+
+      // Apply font size
+      function applyFontSize(size) {
+        document.body.style.fontSize = size === 'small' ? '12px' :
+          size === 'medium' ? '16px' :
+          size === 'large' ? '20px' : '16px';
+      }
+
+      // Apply brightness and contrast filters
+      function applyFilters(brightness, contrast) {
+        document.body.style.filter = `brightness(${brightness}%) contrast(${contrast}%)`;
+      }
+
+      // Apply text alignment
+      function applyTextAlign(align) {
+        document.body.style.textAlign = align;
+      }
+
+      // Toggle high contrast mode
+      function toggleHighContrast(enabled) {
+        if (enabled) {
+          document.body.classList.add('high-contrast');
+        } else {
+          document.body.classList.remove('high-contrast');
+        }
+      }
+
+      // Toggle animations
+      function toggleAnimations(disabled) {
+        if (disabled) {
+          document.body.classList.add('disable-animations');
+        } else {
+          document.body.classList.remove('disable-animations');
+        }
+      }
+
+      // Apply all settings from an object
+      function applyAllSettings(settings) {
+        themeSelect.value = settings.theme || 'system';
+        fontSizeSelect.value = settings.fontSize || 'medium';
+        brightnessRange.value = settings.brightness || 100;
+        contrastRange.value = settings.contrast || 100;
+        textAlignSelect.value = settings.textAlign || 'left';
+        highContrastCheckbox.checked = settings.highContrast || false;
+        animationsCheckbox.checked = settings.disableAnimations || false;
+
+        applyTheme(settings.theme);
+        applyFontSize(settings.fontSize);
+        applyFilters(settings.brightness, settings.contrast);
+        applyTextAlign(settings.textAlign);
+        toggleHighContrast(settings.highContrast);
+        toggleAnimations(settings.disableAnimations);
+      }
+
+      // Load saved settings if available, else use defaults
+      const savedSettings = loadSettings();
+      if (savedSettings) {
+        applyAllSettings(savedSettings);
+      } else {
+        // Apply default initial values
+        applyTheme(themeSelect.value);
+        applyFontSize(fontSizeSelect.value);
+        applyFilters(brightnessRange.value, contrastRange.value);
+        applyTextAlign(textAlignSelect.value);
+        toggleHighContrast(highContrastCheckbox.checked);
+        toggleAnimations(animationsCheckbox.checked);
+      }
+
+      // Event listeners to apply changes live and save
+      themeSelect.addEventListener('change', e => {
+        applyTheme(e.target.value);
+        saveSettings();
+      });
+      fontSizeSelect.addEventListener('change', e => {
+        applyFontSize(e.target.value);
+        saveSettings();
+      });
+      brightnessRange.addEventListener('input', e => {
+        applyFilters(e.target.value, contrastRange.value);
+        saveSettings();
+      });
+      contrastRange.addEventListener('input', e => {
+        applyFilters(brightnessRange.value, e.target.value);
+        saveSettings();
+      });
+      textAlignSelect.addEventListener('change', e => {
+        applyTextAlign(e.target.value);
+        saveSettings();
+      });
+      highContrastCheckbox.addEventListener('change', e => {
+        toggleHighContrast(e.target.checked);
+        saveSettings();
+      });
+      animationsCheckbox.addEventListener('change', e => {
+        toggleAnimations(e.target.checked);
+        saveSettings();
+      });
+
+      // Save button (optional, already saving on change)
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        saveSettings();
+        alert('Settings saved!');
+      });
+    });
+  </script>
 
 </body>
 </html>

@@ -30,8 +30,13 @@ body {
     margin-bottom: -0.5px;
 }
 .container label{
-    font-size:small;
-    color:rgb(24, 24, 23)
+    font-weight: bold;
+    color: #1f60a6;
+}
+.container label.desc{
+    font-weight:lighter;
+    font-size: small;
+    color:rgb(54, 54, 54)
 }
 
 .container input{
