@@ -7,7 +7,7 @@ window.onload = function () {
 
   const loggedInEmail = localStorage.getItem("loggedInUser");
   if(loggedInEmail){
-    window.location.href = "index.html";
+    window.location.href = "home.html";
   }
 
   loginForm.addEventListener("submit", function (e) {
