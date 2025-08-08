@@ -10,7 +10,12 @@ h1 {
     color: #1565c0;
 
 }
-
+h1.notes{
+    margin-top:2cm;
+}
+h5{
+    margin-top:2cm
+}
 .container {
     height: 100%;
     display: flex;
@@ -22,7 +27,6 @@ h1 {
     padding: 5px;
     width: 150px;
     background-color: rgb(211, 211, 211);
-    margin-top:-5cm;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,17 +37,20 @@ h1 {
     color:#1565c0;
     text-align:justify;
 }
-
+.toolbar label.size{
+    margin-top:15px;
+    margin-bottom:-3px;
+}
 .toolbar input {
     margin-top: 10px;
     width: 30px;
     height: 30px;
     padding:0;
 }
-
 .toolbar input::-webkit-color-swatch-wrapper{
     padding: 0;
 }
+
 .toolbar button {
     margin-top: 10px;
     width:100px;
