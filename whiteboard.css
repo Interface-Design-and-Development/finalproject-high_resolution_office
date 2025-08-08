@@ -4,17 +4,18 @@ body {
     height: 100%;
     overflow: hidden;
     color: white;
+    font-family:Arial, Helvetica, sans-serif
 }
 
 h1 {
     color: #1565c0;
-
 }
 h1.notes{
-    margin-top:2cm;
+    margin-top:1.5cm;
 }
-h5{
-    margin-top:2cm
+p{
+    margin-top:2.5cm;
+    font-size:13px;
 }
 .container {
     height: 100%;
@@ -69,39 +70,6 @@ h5{
 }
 .wb-canvas{
     border:10px solid rgb(211, 211, 211);
-}
-
-form{
-    background-color: #eee;
-    width: max-content;
-    padding: 5px;
-    margin: 10px;
-    border-radius: 24px;
-    display: flex;
-    gap: 10px;
-}
-form button{
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border: none;
-    background-color: transparent;
-    font-size: large;
-    cursor: pointer;
-}
-
-form input{
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border: none;
-    background-color: transparent;
-    font-size: large;
-    cursor: pointer;
-}
-
-form input::-webkit-color-swatch-wrapper{
-    padding: 0;
 }
 
 #list textarea{

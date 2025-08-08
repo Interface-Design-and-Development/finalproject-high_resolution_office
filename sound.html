@@ -12,27 +12,27 @@
     <form class="settings">
         <h4>Main Volume</h4>
         <input type="range" id="text-size" name="text-size" min="0" max="100" value="50">
-        <span id="percentageValue">50%</span>
+        <span id="percentageValue">50%</span><br><br>
 
-        <h4>Notifications</h4>
-        <label><input type=checkbox id="contrast" name="contrast">
-            <br>Recived notification<br></label>
+        <label>
+          <input type="checkbox" name="notifications" checked />
+          Notifications<br /><br /></label>
         
-        <h4>Texts</h4>
-        <label><input type=checkbox id="contrast" name="contrast">
-            <br>Reciving a text or message<br></label>
-        
-        <h4>Email</h4>
-        <label><input type=checkbox id="contrast" name="contrast">
-            <br>Received an email<br></label>
+        <label><input type=checkbox id="SMS" name="SMS" checked>
+            SMS<br><br></label>
+  
+        <label><input type=checkbox id="email" name="email" checked>
+            Email<br><br></label>
 
         <h4>Headphone Volume</h4>
         <input type="range" id="text-size" name="text-size" min="0" max="100" value="50">
         <span id="percentageValue">50%</span>
         
         <button type="submit">Save Preferences</button>
+
+        <p><a href="settings.html">← Back to Settings</a></p>
     </form>
-    <h5><a href="settings.html">← Back to Settings</a></h5>
+    
   </div> 
 </body>
 </html>
