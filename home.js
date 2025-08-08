@@ -353,6 +353,8 @@ function createWidget(type) {
   widget.style.left = "100px";
   widget.style.width = "220px";
   widget.style.height = "160px";
+  
+  widget.style.borderColor = "black";
   widget.style.position = "absolute";
   widget.dataset.type = type; //store widget type on the element
 
