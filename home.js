@@ -47,7 +47,8 @@ function saveUserState() {
       left: rect.left,
       width: rect.width,
       height: rect.height,
-      pinned: win.classList.contains("pinned")
+      pinned: win.classList.contains("pinned"),
+      type: win.dataset.type || "App"
     });
   });
   currentUser.layout = layout;
@@ -89,13 +90,15 @@ function loadLayout(user) {
     winEl.style.height = win.height + "px";
     winEl.style.position = "absolute";
     winEl.style.resize = win.pinned ? "none" : "both";
+    winEl.dataset.type = win.type || "App";
 
     winEl.innerHTML = `
       <div class="window-header">
         <button class="pin-btn">${win.pinned ? "📍" : "📌"}</button>
         <button class="delete-btn">🗑️</button>
-        <h3>${win.id}</h3>
+        <h3>${win.type || "App"}</h3>
       </div>
+      <div class="widget-content">Loading..</div>
     `;
 
     if (win.pinned) {
@@ -107,6 +110,7 @@ function loadLayout(user) {
     makeDraggable(winEl, ".window-header");
     attachPinButton(winEl);
     attachDeleteButton(winEl);
+    renderWidgetContent(winEl);
   });
 
   if (user.layout?.length > 0) {
@@ -139,34 +143,9 @@ function loadNotes(user) {
 }
 
 // ======== BUTTON ACTIONS ========
-document.getElementById("save-layout-btn").addEventListener("click", saveUserState);
-
 document.getElementById("new-window-btn").addEventListener("click", () => {
-  windowCount++;
-  const newWin = document.createElement("div");
-  newWin.classList.add("app-window");
-  newWin.id = `window-${windowCount}`;
-  newWin.style.top = "100px";
-  newWin.style.left = "100px";
-  newWin.style.width = "200px";
-  newWin.style.height = "150px";
-  newWin.style.position = "absolute";
-  newWin.style.resize = "both";
-
-  newWin.innerHTML = `
-    <div class="window-header">
-      <button class="pin-btn">📌</button>
-      <button class="delete-btn">🗑️</button>
-      <h3>${newWin.id}</h3>
-    </div>
-    <p>Window content here</p>
-  `;
-
-  document.body.appendChild(newWin);
-  makeDraggable(newWin, ".window-header");
-  attachPinButton(newWin);
-  attachDeleteButton(newWin);
-  saveUserState();
+  createWidget();   // picks Weather or Calendar, builds it, renders content
+  windowCount++;    // optional counter update
 });
 
 document.querySelector(".new-button").addEventListener("click", addNote);
@@ -257,3 +236,88 @@ function attachDeleteButton(el) {
     }
   });
 }
+
+function createWidget() {
+  const type = prompt("Enter widget type (Weather or Calendar):");
+  if (!type || !["Weather","Calendar"].includes(type)) {
+    alert("Please type exactly: Weather or Calendar");
+    return;
+  }
+
+  const widget = document.createElement("div");
+  widget.className = "app-window";
+  widget.id = `window-${Date.now()}`;
+  widget.style.top = "100px";
+  widget.style.left = "100px";
+  widget.style.width = "220px";
+  widget.style.height = "160px";
+  widget.style.position = "absolute";
+  widget.dataset.type = type; // 👈 store widget type on the element
+
+  widget.innerHTML = `
+    <div class="window-header">
+      <button class="pin-btn">📌</button>
+      <button class="delete-btn">🗑️</button>
+      <h3>${type} Widget</h3>
+    </div>
+    <div class="widget-content">Loading ${type}...</div>
+  `;
+
+  document.body.appendChild(widget);
+
+  makeDraggable(widget, ".window-header");
+  attachPinButton(widget);
+  attachDeleteButton(widget);
+
+  // Populate content
+  renderWidgetContent(widget);
+
+  // Persist right away
+  saveUserState();
+}
+
+function renderWidgetContent(winEl) {
+  const type = winEl.dataset.type;
+  const target = winEl.querySelector(".widget-content");
+  if (!target) return;
+
+  if (type === "Weather") {
+    fetchMockWeather().then(data => {
+      target.innerHTML = `
+        <div><strong>${data.location}</strong></div>
+        <div>${data.temperature}, ${data.condition}</div>
+      `;
+    });
+  } else if (type === "Calendar") {
+    fetchMockCalendar().then(events => {
+      target.innerHTML = `
+        <div><strong>${new Date().toDateString()}</strong></div>
+        <ul style="margin:6px 0 0 16px;">
+          ${events.map(e => `<li>${e.time} — ${e.title}</li>`).join("")}
+        </ul>
+      `;
+    });
+  } else {
+    target.textContent = "Unknown widget";
+  }
+}
+
+function fetchMockWeather() {
+  return new Promise(res => {
+    setTimeout(() => {
+      res({ location: "Dallas, TX", temperature: "84°F", condition: "Sunny" });
+    }, 500);
+  });
+}
+
+function fetchMockCalendar() {
+  return new Promise(res => {
+    setTimeout(() => {
+      res([
+        { time: "9:00 AM",  title: "Team Standup" },
+        { time: "1:30 PM",  title: "Client Sync" }
+      ]);
+    }, 500);
+  });
+}
+

@@ -19,6 +19,12 @@ header {
   text-align: end;
  }
 
+ header .header-wrapper select#widget-type {
+  margin-right: 8px;
+  padding: 4px 6px;
+  font-size: 14px;
+}
+
 /* NAVIGATION BAR*/
 /* WRAPPER TO TRACK HOVER */
 .sidebar-wrapper {
