@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Group4 High Resolution Office</title>
   <link rel="stylesheet" href="home.css" />
-  
 </head>
 <body>
   <!-- Header with buttons -->
@@ -36,6 +34,13 @@
         <a href="whiteboard.html"><li>WHITEBOARD</li></a>
         <a href="settings.html"><li>SETTINGS</li></a>
       </ul>
+      
+      <!-- Power Controls -->
+      <h4>Power Controls</h4>
+      <!-- Removed Power On button as requested -->
+      <button id="powerOffBtn" class="widget-button">Power Off</button>
+      <button id="restartBtn" class="widget-button">Restart</button>
+      <button id="restModeBtn" class="widget-button">Rest Mode</button>
     </div>
 
   <!-- Main dashboard content as in second HTML -->
@@ -78,34 +83,32 @@
   <script src="home.js"></script>
 
   <script>
+    // Control Center Toggle
     const controlCenterToggleBtn = document.getElementById('controlCenterToggleBtn');
     const controlCenter = document.getElementById('controlCenter');
-
     controlCenterToggleBtn.addEventListener('click', () => {
       controlCenter.style.display = controlCenter.style.display === 'block' ? 'none' : 'block';
     });
 
+    // Volume and Brightness sliders
     document.getElementById('volumeRange').addEventListener('input', e => {
       console.log('Volume:', e.target.value);
       // Implement volume logic here
     });
-
     document.getElementById('brightnessRange').addEventListener('input', e => {
       document.body.style.filter = `brightness(${e.target.value}%)`;
     });
 
+    // Toggle buttons alerts
     document.getElementById('toggleBluetoothBtn').addEventListener('click', () => {
       alert('Bluetooth toggled!');
     });
-
     document.getElementById('toggleWifiBtn').addEventListener('click', () => {
       alert('Wi-Fi toggled!');
     });
-
     document.getElementById('toggleDarkModeBtn').addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
     });
-
     document.getElementById('openCalculatorBtn').addEventListener('click', () => {
       window.open('https://www.google.com/search?q=calculator', '_blank');
     });
@@ -113,35 +116,28 @@
     // Voice to talk feature using Web Speech API
     const voiceTalkBtn = document.getElementById('voiceTalkBtn');
     let recognition;
-
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognition = new SpeechRecognition();
       recognition.lang = 'en-US';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
-
       recognition.onstart = () => {
         voiceTalkBtn.classList.add('listening');
         voiceTalkBtn.title = 'Listening... Click to stop';
       };
-
       recognition.onend = () => {
         voiceTalkBtn.classList.remove('listening');
         voiceTalkBtn.title = 'Click and speak';
       };
-
       recognition.onerror = (event) => {
         alert('Error occurred in recognition: ' + event.error);
         voiceTalkBtn.classList.remove('listening');
       };
-
       recognition.onresult = (event) => {
         const speechResult = event.results[0][0].transcript;
         alert('You said: ' + speechResult);
-        // You can replace alert with any function to handle the speech result
       };
-
       voiceTalkBtn.addEventListener('click', () => {
         if (voiceTalkBtn.classList.contains('listening')) {
           recognition.stop();
@@ -153,10 +149,38 @@
       voiceTalkBtn.disabled = true;
       voiceTalkBtn.title = 'Speech recognition not supported in this browser';
     }
+
+    // Power Controls functionality (without clearing storage)
+    document.getElementById('powerOffBtn').addEventListener('click', () => {
+      if(confirm('Are you sure you want to power off?')) {
+        alert('Powering Off...');
+        window.location.href = 'intro.html';
+      }
+    });
+
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      if(confirm('Restart the system now?')) {
+        alert('Restarting...');
+        window.location.href = 'intro.html';
+      }
+    });
+
+    document.getElementById('restModeBtn').addEventListener('click', () => {
+      alert('Entering Rest Mode...');
+      document.body.style.filter = 'brightness(30%)';
+      setTimeout(() => {
+        document.body.style.filter = '';
+        alert('Exiting Rest Mode');
+      }, 5000);
+    });
   </script>
   <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
 </body>
 </html>
+
+
+
+
 
 
 
