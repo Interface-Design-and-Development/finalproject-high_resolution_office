@@ -70,11 +70,11 @@ body {
   background-color: #f1f1f1;
 }
 
-/* ---------- CONTROL CENTER + VOICE BUTTONS (bottom-right corner) ---------- */
+/* ---------- CONTROL CENTER + VOICE BUTTONS ---------- */
 .control-center-toggle {
   position: fixed;
   bottom: 20px;
-  right: 70px;  /* leaves room for mic button */
+  right: 70px; 
   z-index: 1100;
 }
 
@@ -118,7 +118,7 @@ body {
 /* control center panel that opens upward */
 .control-center-container {
   position: fixed;
-  bottom: 75px; /* sits just above the buttons */
+  bottom: 75px; 
   right: 20px;
   width: 240px;
   background: #f7f7f7;
@@ -190,7 +190,7 @@ body {
 }
 .sidebar li a { text-decoration: none; color: inherit; }
 
-/* ---------- MAIN CONTENT (account for fixed top bar) ---------- */
+/* ---------- MAIN CONTENT ---------- */
 .main {
   margin-left: 160px;
   padding: calc(var(--header-height) + 16px) 40px 40px;
@@ -208,14 +208,14 @@ body {
   margin-bottom: 18px;
 }
 
-/* dash grid */
+
 .dash-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 20px;
 }
 
-/* notes / app windows */
+
 .note {
   background-color: #ffff88;
   border: 1px solid #d0cba0;
