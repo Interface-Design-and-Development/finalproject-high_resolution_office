@@ -288,6 +288,16 @@ function makeDraggable(el, handleSelector) {
 
   handle.onmousedown = function (e) {
     if (e.target.closest(".note-content")) return; // Don't drag from inside editable text
+    
+     if (
+      e.target.closest(".note-content") ||
+      e.target.closest(".delete-button") ||
+      e.target.closest(".delete-btn") ||
+      e.target.closest("button")
+    ) {
+      return; // let the click go through
+    }
+
     offsetX = e.clientX - el.offsetLeft;
     offsetY = e.clientY - el.offsetTop;
 
@@ -303,6 +313,7 @@ function makeDraggable(el, handleSelector) {
     document.onmouseup = function () {
       document.onmousemove = null;
       document.onmouseup = null;
+      saveUserState();
     };
   };
 }
@@ -336,9 +347,11 @@ function attachDeleteButton(el) {
   const deleteBtn = el.querySelector(".delete-btn, .delete-button");
   if (!deleteBtn) return;
 
-  deleteBtn.addEventListener("click", () => {
+  deleteBtn.addEventListener("click", (ev) => {
+    ev.stopPropagation(); // prevent drag header handlers from seeing this
     const type = el.classList.contains("note") ? "note" : "window";
     if (confirm(`Are you sure you want to delete this ${type}?`)) {
+      if (el.__timerId) clearInterval(el.__timerId);
       el.remove();
       saveUserState();
     }
