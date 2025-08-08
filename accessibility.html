@@ -3,36 +3,29 @@
 <head>
       <meta charset="UTF-8">
       <title>Settings Page</title>
-     <link rel="stylesheet" href="accessibility.css">
+     <link rel="stylesheet" href="language.css">
 </head>
 <body>
   <div class="container">
-      <h1>Accessibility Settings</h1>
-    <form class="settings">
-        <h4>Text Size</h4>
-        <label><input type="range" id="text-size" name="text-size" min="0" max="100" value="50">
-            <br>Change the size of the text displayed on screen.<br></label>   
-
-        <h4>High Contrast</h4>
-        <label><input type=checkbox id="contrast" name="contrast">
-            <br>High contrast for better visibility<br></label>
-        
-        <h4>Closed Captions</h4>
-        <label><input type=checkbox id="contrast" name="contrast">
-            <br>Provides captions for any audio that may be playing<br></label>
-
-        <h4>Voice Control</h4>
-        <label><input type=checkbox id="contrast" name="contrast">
-            <br>Control what happnes on the screen with just your voice <br></label>
-
-        <h4>Text-to-Speech</h4>
-        <label><input type=checkbox id="contrast" name="contrast">
-            <br>Reads the text outloud for the user<br></label>
-
+      <h1>Language Settings</h1>
+    <form class="settings">          
+        <label for="language">Choose a Language:</label>
+        <select name="language" id="langugae">
+            <option value="English(US)">English(US)</option>
+            <option value="English(UK)">English(UK)</option>
+            <option value="Spanish(Latin America)">Spanish(Latin America)</option>
+            <option value="Mandarin Chinese">Mandarin Chines</option>
+            <option value="Hindi">Hindi</option>
+            <option value="French">French</option>
+            <option value="German">German</option>
+            <option value="Portuguese">Portuguese</option>
+        </select>
+        <br><br>        
         <button type="submit">Save Preferences</button>
+
+        <p><a href="settings.html">← Back to Settings</a></p>
     </form>
-    <h5><a href="settings.html">← Back to Settings</a></h5>
+    
   </div> 
 </body>
-
 </html>
