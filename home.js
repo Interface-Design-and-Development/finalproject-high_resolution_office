@@ -10,6 +10,8 @@ window.onload = () => {
   // Always load both layout and notes
   loadLayout(currentUser);
   loadNotes(currentUser);
+  loadWhiteboard(currentUser);
+
 
   const logoutBtn = document.getElementById("logout-btn");
   if (logoutBtn) {
@@ -70,6 +72,38 @@ function saveUserState() {
     });
   });
   currentUser.notes = notes;
+
+// --- WHITEBOARD SAVE ---
+const wbCanvas = document.getElementById('wb-canvas');
+const wbList   = document.getElementById('list'); // container holding whiteboard notes
+
+let whiteboardData = null;
+if (wbCanvas) {
+  try {
+    whiteboardData = wbCanvas.toDataURL('image/png');  // snapshot of drawing
+  } catch(_) {
+    whiteboardData = null; // if tainted canvas (not expected here)
+  }
+}
+
+let whiteboardNotes = [];
+if (wbList) {
+  whiteboardNotes = Array.from(wbList.querySelectorAll('.note')).map(n => {
+    const ta = n.querySelector('textarea');
+    return {
+      left: parseInt(n.style.left || '0', 10) || 0,
+      top:  parseInt(n.style.top  || '0', 10) || 0,
+      color: n.style.borderColor || '#000',
+      text:  ta ? ta.value : ''
+    };
+  });
+}
+
+currentUser.whiteboard = {
+  image: whiteboardData,     // base64 PNG
+  notes: whiteboardNotes     // [{left,top,color,text}]
+};
+
 
   // Write back
   const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -164,7 +198,50 @@ function showToast(message, duration = 10000) {
   }, duration);
 }
 
-// ======== BUTTON ACTIONS ========
+// ======== WHITEBOARD LOADING ====== //
+function loadWhiteboard(user) {
+  const wbCanvas = document.getElementById('wb-canvas');
+  const wbList   = document.getElementById('list');
+  if (!wbCanvas || !wbList) return;
+
+  // restore canvas image
+  const dataURL = user.whiteboard?.image;
+  if (dataURL) {
+    const img = new Image();
+    img.onload = () => {
+      // draw at 1:1; if your canvas has specific size, ensure it matches what you saved
+      const ctx = wbCanvas.getContext('2d');
+      ctx.clearRect(0, 0, wbCanvas.width, wbCanvas.height);
+      ctx.drawImage(img, 0, 0, wbCanvas.width, wbCanvas.height);
+    };
+    img.src = dataURL;
+  }
+
+  // clear current notes & restore
+  wbList.querySelectorAll('.note').forEach(n => n.remove());
+  (user.whiteboard?.notes || []).forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'note';
+    el.style.position = 'absolute';
+    el.style.left = n.left + 'px';
+    el.style.top  = n.top + 'px';
+    el.style.borderColor = n.color || '#000';
+    el.innerHTML = `
+      <span class="close">x</span>
+      <textarea rows="10" cols="30" placeholder="Write Content..."></textarea>
+    `;
+    const ta = el.querySelector('textarea');
+    if (ta) ta.value = n.text || '';
+
+    // reattach behaviors
+    attachWBNoteDrag(el);
+    attachWBNoteClose(el);
+
+    wbList.appendChild(el);
+  });
+}
+
+// ======== BUTTON ACTIONS ======== //
 document.getElementById("new-window-btn").addEventListener("click", () => {
   const sel = document.getElementById("widget-type");
   const raw = sel ? sel.value : null;
@@ -211,6 +288,16 @@ function makeDraggable(el, handleSelector) {
 
   handle.onmousedown = function (e) {
     if (e.target.closest(".note-content")) return; // Don't drag from inside editable text
+    
+     if (
+      e.target.closest(".note-content") ||
+      e.target.closest(".delete-button") ||
+      e.target.closest(".delete-btn") ||
+      e.target.closest("button")
+    ) {
+      return; // let the click go through
+    }
+
     offsetX = e.clientX - el.offsetLeft;
     offsetY = e.clientY - el.offsetTop;
 
@@ -226,6 +313,7 @@ function makeDraggable(el, handleSelector) {
     document.onmouseup = function () {
       document.onmousemove = null;
       document.onmouseup = null;
+      saveUserState();
     };
   };
 }
@@ -259,9 +347,11 @@ function attachDeleteButton(el) {
   const deleteBtn = el.querySelector(".delete-btn, .delete-button");
   if (!deleteBtn) return;
 
-  deleteBtn.addEventListener("click", () => {
+  deleteBtn.addEventListener("click", (ev) => {
+    ev.stopPropagation(); // prevent drag header handlers from seeing this
     const type = el.classList.contains("note") ? "note" : "window";
     if (confirm(`Are you sure you want to delete this ${type}?`)) {
+      if (el.__timerId) clearInterval(el.__timerId);
       el.remove();
       saveUserState();
     }
@@ -276,6 +366,8 @@ function createWidget(type) {
   widget.style.left = "100px";
   widget.style.width = "220px";
   widget.style.height = "160px";
+  
+  widget.style.borderColor = "black";
   widget.style.position = "absolute";
   widget.dataset.type = type; //store widget type on the element
 

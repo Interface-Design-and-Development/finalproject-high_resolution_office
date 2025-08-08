@@ -8,7 +8,7 @@ body {
 }
 
 h1 {
-    color: #1565c0;
+    color: #0a6fe1;;
 }
 h1.notes{
     margin-top:1.5cm;
@@ -55,7 +55,7 @@ p{
 .toolbar button {
     margin-top: 10px;
     width:100px;
-    background-color: #1565c0;
+    background-color: #0a6fe1;;
     border: 2px;
     border-radius: 4px;
     color:white;
