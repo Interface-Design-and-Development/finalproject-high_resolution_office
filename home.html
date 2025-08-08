@@ -168,6 +168,33 @@
     </div>
   </header>
 
+  <!-- Sidebar added exactly as original -->
+  <div class="sidebar-wrapper">
+    <div class="sidebar">
+      <h3>Workspace</h3>
+      <ul>
+        <li><a href="home.html">HOME</a></li>
+        <a href="whiteboard.html"><li>WHITEBOARD</li></a>
+        <a href="home.html"><li>NOTES</li></a>
+        <a href="account.html"><li>ACCOUNT</li></a>
+        <a href="settings.html"><li>SETTINGS</li></a>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main dashboard content as in second HTML -->
+  <div class="main">
+    <h1>DASHBOARD</h1>
+    <div class="dash-container" id="dashContainer">
+      <div class="dashboard">
+        TO DO ITEM
+        <span class="delete-button" onclick="this.parentElement.remove()">X</span>
+      </div>
+    </div>
+
+    <button class="new-button" onclick="addNote()">+ New Note</button>
+  </div>
+
   <!-- Control Center Toggle Button -->
   <div class="control-center-toggle">
     <button id="controlCenterToggleBtn">☰ Control Center</button>
@@ -192,10 +219,8 @@
     <button class="widget-button" id="openCalculatorBtn">Open Calculator</button>
   </div>
 
-  <!-- Your existing script -->
   <script src="home.js"></script>
 
-  <!-- Control Center toggle and widget functionality -->
   <script>
     const controlCenterToggleBtn = document.getElementById('controlCenterToggleBtn');
     const controlCenter = document.getElementById('controlCenter');
@@ -272,59 +297,13 @@
       voiceTalkBtn.disabled = true;
       voiceTalkBtn.title = 'Speech recognition not supported in this browser';
     }
-
-    // **Add display settings persistence script here**
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('displaySettings');
-      if (!saved) return;
-      const settings = JSON.parse(saved);
-
-      // Apply theme colors
-      if (settings.theme === 'light') {
-        document.body.style.backgroundColor = 'white';
-        document.body.style.color = 'black';
-      } else if (settings.theme === 'dark') {
-        document.body.style.backgroundColor = '#121212';
-        document.body.style.color = '#e0e0e0';
-      } else {
-        document.body.style.backgroundColor = '';
-        document.body.style.color = '';
-      }
-
-      // Font size
-      document.body.style.fontSize = settings.fontSize === 'small' ? '12px' :
-                                     settings.fontSize === 'large' ? '20px' : '16px';
-
-      // Brightness and contrast filters (for Control Center brightness, combined with range slider)
-      document.body.style.filter = `brightness(${settings.brightness || 100}%)`;
-
-      // Text alignment
-      document.body.style.textAlign = settings.textAlign || 'left';
-
-      // High contrast mode (add/remove class)
-      if (settings.highContrast) {
-        document.body.classList.add('high-contrast');
-      } else {
-        document.body.classList.remove('high-contrast');
-      }
-
-      // Disable animations (add/remove class)
-      if (settings.disableAnimations) {
-        document.body.classList.add('disable-animations');
-      } else {
-        document.body.classList.remove('disable-animations');
-      }
-
-      // Set Control Center sliders and inputs to match saved settings
-      const brightnessSlider = document.getElementById('brightnessRange');
-      if (brightnessSlider) brightnessSlider.value = settings.brightness || 100;
-
-      // Optionally: you can also add volume persistence and others similarly
-    });
   </script>
 </body>
 </html>
+
+
+
+
 
 
 
