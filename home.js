@@ -144,9 +144,18 @@ function loadNotes(user) {
 
 // ======== BUTTON ACTIONS ========
 document.getElementById("new-window-btn").addEventListener("click", () => {
-  createWidget();   // picks Weather or Calendar, builds it, renders content
-  windowCount++;    // optional counter update
+  const sel = document.getElementById("widget-type");
+  const raw = sel ? sel.value : null;
+  const type = normalizeType(raw);
+  createWidget(type);
 });
+
+function normalizeType(t) {
+  if (!t || typeof t !== "string") return "Weather";
+  const norm = t.trim().toLowerCase();
+  const map = { weather:"Weather", calendar:"Calendar", clock:"Clock", news:"News", stocks:"Stocks", quote:"Quote" };
+  return map[norm] || "Weather";
+}
 
 document.querySelector(".new-button").addEventListener("click", addNote);
 
@@ -237,13 +246,7 @@ function attachDeleteButton(el) {
   });
 }
 
-function createWidget() {
-  const type = prompt("Enter widget type (Weather or Calendar):");
-  if (!type || !["Weather","Calendar"].includes(type)) {
-    alert("Please type exactly: Weather or Calendar");
-    return;
-  }
-
+function createWidget(type) {
   const widget = document.createElement("div");
   widget.className = "app-window";
   widget.id = `window-${Date.now()}`;
@@ -252,7 +255,7 @@ function createWidget() {
   widget.style.width = "220px";
   widget.style.height = "160px";
   widget.style.position = "absolute";
-  widget.dataset.type = type; // 👈 store widget type on the element
+  widget.dataset.type = type; //store widget type on the element
 
   widget.innerHTML = `
     <div class="window-header">
@@ -281,22 +284,60 @@ function renderWidgetContent(winEl) {
   const target = winEl.querySelector(".widget-content");
   if (!target) return;
 
-  if (type === "Weather") {
-    fetchMockWeather().then(data => {
+  const renderers = {
+    Weather: async () => {
+      const d = await fetchMockWeather();
       target.innerHTML = `
-        <div><strong>${data.location}</strong></div>
-        <div>${data.temperature}, ${data.condition}</div>
+        <div><strong>${d.location}</strong></div>
+        <div>${d.temperature}, ${d.condition}</div>
       `;
-    });
-  } else if (type === "Calendar") {
-    fetchMockCalendar().then(events => {
+    },
+    Calendar: async () => {
+      const events = await fetchMockCalendar();
       target.innerHTML = `
         <div><strong>${new Date().toDateString()}</strong></div>
         <ul style="margin:6px 0 0 16px;">
           ${events.map(e => `<li>${e.time} — ${e.title}</li>`).join("")}
         </ul>
       `;
-    });
+    },
+    Clock: () => {
+      target.innerHTML = `<div style="font-size:22px" id="clock-${winEl.id}"></div>`;
+      const el = target.querySelector(`#clock-${CSS.escape(winEl.id)}`);
+      const tick = () => el && (el.textContent = new Date().toLocaleTimeString());
+      tick();
+      const timerId = setInterval(tick, 1000);
+      // store a cleanup if you want later
+      winEl.__timerId = timerId;
+    },
+    News: async () => {
+      const items = await fetchMockNews();
+      target.innerHTML = `
+        <ul style="margin-left:16px;">
+          ${items.map(n => `<li>${n.title}</li>`).join("")}
+        </ul>
+      `;
+    },
+    Stocks: async () => {
+      const quotes = await fetchMockStocks();
+      target.innerHTML = `
+        <div><strong>${quotes.symbol}</strong></div>
+        <div>Price: ${quotes.price}</div>
+        <div>Change: ${quotes.change}</div>
+      `;
+    },
+    Quote: async () => {
+      const q = await fetchMockQuote();
+      target.innerHTML = `
+        <div style="font-style:italic">"${q.text}"</div>
+        <div style="margin-top:6px">— ${q.author}</div>
+      `;
+    }
+  };
+
+  // call the appropriate renderer, or default
+  if (renderers[type]) {
+    renderers[type]();
   } else {
     target.textContent = "Unknown widget";
   }
@@ -315,9 +356,46 @@ function fetchMockCalendar() {
     setTimeout(() => {
       res([
         { time: "9:00 AM",  title: "Team Standup" },
-        { time: "1:30 PM",  title: "Client Sync" }
+        { time: "1:30 PM",  title: "Client Sync" },
+        { time: "4:00 PM",  title: "Design Review" }
       ]);
     }, 500);
   });
 }
+
+function fetchMockNews() {
+  return new Promise(res => {
+    setTimeout(() => {
+      res([
+        { title: "AI tools boost productivity in small teams" },
+        { title: "New display tech promises 3x resolution" },
+        { title: "UX trends: dense dashboards are back" }
+      ]);
+    }, 600);
+  });
+}
+
+function fetchMockStocks() {
+  return new Promise(res => {
+    setTimeout(() => {
+      const price = (100 + Math.random() * 20).toFixed(2);
+      const change = ((Math.random() - 0.5) * 2).toFixed(2);
+      res({ symbol: "ACME", price: `$${price}`, change: `${change}%` });
+    }, 600);
+  });
+}
+
+function fetchMockQuote() {
+  return new Promise(res => {
+    setTimeout(() => {
+      const quotes = [
+        { text: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
+        { text: "Make it work, make it right, make it fast.", author: "Kent Beck" },
+        { text: "Perfection is achieved by subtraction.", author: "Antoine de Saint-Exupéry" }
+      ];
+      res(quotes[Math.floor(Math.random() * quotes.length)]);
+    }, 400);
+  });
+}
+
 
