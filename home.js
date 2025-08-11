@@ -1,7 +1,7 @@
 window.onload = () => {
   const currentUser = loadUser();
   if (!currentUser) {
-    window.location.href = "start.html";
+    window.location.href = "index.html";
     return;
   }
 
@@ -17,7 +17,7 @@ window.onload = () => {
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem("loggedInUser");
-      window.location.href = "start.html";
+      window.location.href = "index.html";
     });
   }
   const saveBtn = document.getElementById("save-layout-btn");
@@ -511,5 +511,6 @@ function fetchMockQuote() {
     }, 400);
   });
 }
+
 
 
