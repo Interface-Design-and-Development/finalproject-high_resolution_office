@@ -23,7 +23,7 @@ window.onload = function () {
     const userExists = users.some(user => user.email === email);
     if (userExists) {
       alert("This email is already registered. Please log in.");
-      window.location.href = "start.html"
+      window.location.href = "index.html"
       return;
     }
     
@@ -40,6 +40,7 @@ window.onload = function () {
     localStorage.setItem("users", JSON.stringify(users));
 
     alert("Registration successful! You can now log in.");
-    window.location.href = "start.html";
+    window.location.href = "index.html";
   });
 };
+
